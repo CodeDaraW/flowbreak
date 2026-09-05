@@ -1,0 +1,21 @@
+{
+  "id": "0002-scheduler",
+  "status": "completed",
+  "requirements": [
+    "FB-002",
+    "FB-003",
+    "FB-004",
+    "FB-005",
+    "FB-006",
+    "FB-008",
+    "FB-010"
+  ],
+  "decisions": [
+    "docs/decisions/0003-runtime-semantics.md"
+  ],
+  "artifacts": [
+    "plan.md",
+    "tasks.md",
+    "verification.md"
+  ]
+}

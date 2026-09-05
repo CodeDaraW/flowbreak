@@ -15,53 +15,61 @@
     "id": "FB-002",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0001-bootstrap",
+    "iteration": "0002-scheduler",
     "implementation": [
-      "Packages/FlowBreakCore/Sources/FlowBreakCore/WorkSession.swift"
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/WorkSessionTests.swift"
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
     ]
   },
   {
     "id": "FB-003",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0001-bootstrap",
+    "iteration": "0002-scheduler",
     "implementation": [
-      "Packages/FlowBreakCore/Sources/FlowBreakCore/WorkSession.swift"
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/WorkSessionTests.swift"
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
     ]
   },
   {
     "id": "FB-004",
-    "status": "planned",
+    "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0001-bootstrap",
-    "implementation": [],
-    "verification": []
+    "iteration": "0002-scheduler",
+    "implementation": [
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
+    ],
+    "verification": [
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
+    ]
   },
   {
     "id": "FB-005",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0001-bootstrap",
+    "iteration": "0002-scheduler",
     "implementation": [
-      "Packages/FlowBreakCore/Sources/FlowBreakCore/WorkSession.swift"
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/WorkSessionTests.swift"
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
     ]
   },
   {
     "id": "FB-006",
-    "status": "planned",
+    "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0001-bootstrap",
-    "implementation": [],
-    "verification": []
+    "iteration": "0002-scheduler",
+    "implementation": [
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
+    ],
+    "verification": [
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
+    ]
   },
   {
     "id": "FB-007",
@@ -75,12 +83,12 @@
     "id": "FB-008",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0001-bootstrap",
+    "iteration": "0002-scheduler",
     "implementation": [
-      "Packages/FlowBreakCore/Sources/FlowBreakCore/WorkSession.swift"
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/WorkSessionTests.swift"
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
     ]
   },
   {
@@ -93,11 +101,15 @@
   },
   {
     "id": "FB-010",
-    "status": "planned",
+    "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0001-bootstrap",
-    "implementation": [],
-    "verification": []
+    "iteration": "0002-scheduler",
+    "implementation": [
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
+    ],
+    "verification": [
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
+    ]
   },
   {
     "id": "FB-011",

@@ -5,7 +5,7 @@ public enum MovementStage: Sendable { case working, suggested, overdue }
 
 /// A deterministic accumulator, not the full reminder scheduler.
 /// Its caller supplies eligible elapsed time after idle/sleep classification.
-public struct WorkSession: Equatable, Sendable {
+public struct WorkSession: Codable, Equatable, Sendable {
     public private(set) var eyeElapsed: TimeInterval = 0
     public private(set) var movementElapsed: TimeInterval = 0
     public private(set) var activeBreak: BreakKind?
@@ -30,6 +30,18 @@ public struct WorkSession: Equatable, Sendable {
         if kind == .movement { movementElapsed = 0 }
         activeBreak = nil
     }
+
+    public mutating func skip(_ kind: BreakKind) {
+        if kind == .eye { eyeElapsed = 0 } else { movementElapsed = 0 }
+    }
+
+    public mutating func setAccumulation(eye: TimeInterval, movement: TimeInterval) {
+        eyeElapsed = max(0, eye)
+        movementElapsed = max(0, movement)
+    }
+
+    public mutating func setKeepAwake(_ enabled: Bool) { keepAwakeRequested = enabled }
+    public mutating func pauseTiming() { timingPaused = true }
 
     public mutating func startAgentMode() {
         timingPaused = true
