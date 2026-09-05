@@ -1,11 +1,12 @@
 import AppKit
+import SwiftUI
 import Combine
 import FlowBreakCore
 import FlowBreakMac
 
 @MainActor
 final class AppModel: ObservableObject {
-    let settings = SettingsStore()
+    let settings = SettingsStore(defaults: AcceptanceSession.defaults)
     @Published private(set) var engine = BreakEngine()
     @Published private(set) var history: [ActivityEvent] = []
     @Published private(set) var errorKey: String?
@@ -53,7 +54,7 @@ final class AppModel: ObservableObject {
         guard timer == nil else { return }
         engine = BreakEngine(now: now, policy: settings.policy)
         do {
-            let store = try SessionRepository()
+            let store = try SessionRepository(directory: AcceptanceSession.directory)
             repository = store
             if let saved = try store.loadSnapshot() {
                 if saved.version == 1 { engine.restore(saved, at: Date()) }
@@ -195,6 +196,20 @@ final class AppModel: ObservableObject {
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     let model = AppModel()
-    func applicationDidFinishLaunching(_ notification: Notification) { model.start() }
+    private var acceptanceWindow: NSWindow?
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        if AcceptanceSession.directory != nil { NSApplication.shared.setActivationPolicy(.regular) }
+        model.start()
+        if AcceptanceSession.directory != nil {
+            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 390, height: 650),
+                                  styleMask: [.titled, .closable, .miniaturizable], backing: .buffered, defer: false)
+            window.title = "FlowBreak"
+            window.contentView = NSHostingView(rootView: DashboardView(model: model))
+            window.center()
+            window.makeKeyAndOrderFront(nil)
+            NSApplication.shared.activate(ignoringOtherApps: true)
+            acceptanceWindow = window
+        }
+    }
     func applicationWillTerminate(_ notification: Notification) { model.stop() }
 }

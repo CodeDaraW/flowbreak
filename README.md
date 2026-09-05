@@ -53,3 +53,7 @@ SwiftPM 报 `sandbox_apply: Operation not permitted` 表示运行环境限制，
 ## 开源
 
 [MIT](LICENSE)。欢迎贡献，流程见 [CONTRIBUTING.md](CONTRIBUTING.md)。Git 仅在本地初始化，尚未配置远程仓库、CI 托管或正式发布身份。不要提交个人账号、证书、用户运行日志或原始聊天导出。
+
+## 原生 E2E 隔离入口（仅 Debug）
+
+构建后可使用 `open .build/DerivedData/Build/Products/Debug/FlowBreak.app --args --e2e-workspace /absolute/path/to/test-session`。先退出已有实例。该入口打开同一主界面的普通窗口以便原生可访问性工具连接，计时和系统接口不替换；运行数据写入指定目录，设置使用独立测试 suite。Release 忽略该参数。测试结束退出后，正常 `make run` 恢复日常数据。

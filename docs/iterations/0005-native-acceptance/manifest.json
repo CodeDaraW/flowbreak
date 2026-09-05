@@ -1,0 +1,25 @@
+{
+  "id": "0005-native-acceptance",
+  "status": "active",
+  "requirements": [
+    "FB-001",
+    "FB-002",
+    "FB-003",
+    "FB-004",
+    "FB-005",
+    "FB-006",
+    "FB-007",
+    "FB-008",
+    "FB-009",
+    "FB-010",
+    "FB-011"
+  ],
+  "decisions": [
+    "docs/decisions/0003-runtime-semantics.md"
+  ],
+  "artifacts": [
+    "plan.md",
+    "tasks.md",
+    "verification.md"
+  ]
+}
