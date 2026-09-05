@@ -3,6 +3,7 @@ import FlowBreakCore
 
 struct SettingsView: View {
     @ObservedObject var settings: SettingsStore
+    @ObservedObject var model: AppModel
 
     var body: some View {
         Form {
@@ -10,6 +11,21 @@ struct SettingsView: View {
                 Text(settings.text("language.system")).tag("system")
                 Text("简体中文").tag("zh-Hans")
                 Text("English").tag("en")
+            }
+            Section(settings.text("settings.system")) {
+                Toggle(settings.text("wake.display"), isOn: $settings.keepDisplayOn)
+                Text(settings.text("wake.help")).font(.caption).foregroundStyle(.secondary)
+                Picker(settings.text("screen.title"), selection: $settings.reminderScreen) {
+                    Text(settings.text("screen.current")).tag("current")
+                    Text(settings.text("screen.primary")).tag("primary")
+                    ForEach(model.screens, id: \.self) { screen in
+                        Text(screen.localizedName).tag(screenIdentifier(screen))
+                    }
+                    if !["current", "primary"].contains(settings.reminderScreen),
+                       !model.screens.contains(where: { screenIdentifier($0) == settings.reminderScreen }) {
+                        Text(settings.text("screen.missing")).tag(settings.reminderScreen)
+                    }
+                }
             }
             Section(settings.text("settings.timing")) {
                 duration("eye.interval", \.eyeInterval)
@@ -29,11 +45,11 @@ struct SettingsView: View {
                 Text(settings.text("settings.recovery")).foregroundStyle(.orange)
             }
             Text(settings.text("sharing.unavailable")).foregroundStyle(.secondary)
-            Text(settings.text("bootstrap.notice")).font(.caption).foregroundStyle(.secondary)
+            Text(settings.text("settings.privacy")).font(.caption).foregroundStyle(.secondary)
             Button(settings.text("settings.reset")) { settings.reset() }
         }
         .formStyle(.grouped)
-        .frame(width: 540, height: 670)
+        .frame(width: 560, height: 720)
     }
 
     private func duration(_ key: String, _ path: WritableKeyPath<BreakPolicy, Double>) -> some View {

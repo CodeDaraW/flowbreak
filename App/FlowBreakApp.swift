@@ -1,32 +1,32 @@
 import SwiftUI
-import AppKit
 
 @main
 struct FlowBreakApp: App {
-    @StateObject private var settings = SettingsStore()
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
 
     var body: some Scene {
-        MenuBarExtra("FlowBreak", systemImage: "leaf") {
-            VStack(alignment: .leading, spacing: 14) {
-                Text("FlowBreak").font(.title2.bold())
-                Text(settings.text("bootstrap.notice"))
-                    .font(.callout).foregroundStyle(.secondary)
-                Divider()
-                Label(settings.text("eye.title"), systemImage: "eye")
-                Text(settings.text("eye.summary")).font(.caption)
-                Label(settings.text("movement.title"), systemImage: "figure.walk")
-                Text(settings.text("movement.summary")).font(.caption)
-                Divider()
-                SettingsLink { Text(settings.text("settings.title")) }
-                Button(settings.text("quit")) { NSApplication.shared.terminate(nil) }
-            }
-            .padding(20)
-            .frame(width: 300)
+        MenuBarExtra {
+            DashboardView(model: delegate.model)
+        } label: {
+            MenuBarIcon(model: delegate.model)
         }
         .menuBarExtraStyle(.window)
+        Settings { SettingsView(settings: delegate.model.settings, model: delegate.model) }
+    }
+}
 
-        Settings {
-            SettingsView(settings: settings)
-        }
+private struct MenuBarIcon: View {
+    @ObservedObject var model: AppModel
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: model.symbol)
+            if !model.engine.sharing {
+                if model.engine.session.activeBreak != nil {
+                    Text(timeString(model.engine.breakRemaining)).monospacedDigit()
+                } else if let remaining = model.engine.wakeRemaining {
+                    Text(timeString(remaining)).monospacedDigit()
+                }
+            }
+        }.accessibilityLabel("FlowBreak")
     }
 }

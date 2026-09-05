@@ -1,5 +1,6 @@
 import Foundation
 import IOKit.pwr_mgt
+import FlowBreakCore
 
 public enum WakeError: Error { case assertionFailed(Int32), invalidDuration }
 
@@ -38,6 +39,19 @@ public final class WakeController {
         }
         stop()
         assertionIDs = acquired
+    }
+
+    /// Commit system and core intent together, after the caller has sampled elapsed time.
+    public func startSession(engine: inout BreakEngine, seconds: Double?, agent: Bool, keepDisplayOn: Bool) throws {
+        try start(seconds: seconds, keepDisplayOn: keepDisplayOn)
+        engine.startKeepAwake(seconds: seconds)
+        if agent { engine.pauseTiming() }
+    }
+
+    public func extendSession(engine: inout BreakEngine, seconds: Double, keepDisplayOn: Bool) throws {
+        guard let remaining = engine.wakeRemaining else { return }
+        try start(seconds: remaining + seconds, keepDisplayOn: keepDisplayOn)
+        engine.extendKeepAwake(seconds: seconds)
     }
 
     public func stop() {

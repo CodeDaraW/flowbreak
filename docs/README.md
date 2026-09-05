@@ -4,7 +4,7 @@
 
 ## 阅读路径
 
-[产品规格](specs/product.md) → [状态与时间规则](specs/state-model.md) → [需求索引](specs/requirements.json) → [当前迭代](iterations/0001-bootstrap/plan.md) → [技术决策](decisions/0001-native-foundation.md)。未来工作见 [路线图](roadmap.md)。
+[产品规格](specs/product.md) → [状态与时间规则](specs/state-model.md) → [需求索引](specs/requirements.json) → [当前迭代](iterations/0004-reminder-app/plan.md) → [技术决策](decisions/0001-native-foundation.md)。未来工作见 [路线图](roadmap.md)。
 
 ## 文档职责与唯一来源
 

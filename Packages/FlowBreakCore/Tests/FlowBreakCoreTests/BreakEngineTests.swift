@@ -215,3 +215,64 @@ private func work(_ engine: inout BreakEngine, _ seconds: Int) {
     #expect(rollback.session.eyeElapsed == 1200)
     #expect(rollback.events.last == "clockChanged")
 }
+
+@Test func eyeCompletionDoesNotBreakMovementSnooze() {
+    var engine = BreakEngine()
+    work(&engine, 3600)
+    engine.snooze(seconds: 300)
+    engine.beginBreak(.eye)
+    engine.tick(now: 3620, idle: 20)
+    #expect(engine.session.eyeElapsed == 0)
+    #expect(engine.snoozeUntil == 3900)
+    #expect(engine.reminder == nil)
+}
+
+@Test func standalonePowerExpiryDoesNotCountIdleTime() {
+    var engine = BreakEngine()
+    engine.startKeepAwake(seconds: 600)
+    engine.tick(now: 601, idle: 601)
+    #expect(!engine.session.keepAwakeRequested)
+    #expect(engine.session.eyeElapsed == 120)
+}
+
+@Test func checkpointAfterLongIdleCannotRestoreOldDebt() {
+    var engine = BreakEngine()
+    work(&engine, 3600)
+    engine.tick(now: 4000, idle: 400)
+    let date = Date()
+    let saved = engine.snapshot(at: date)
+    var restored = BreakEngine()
+    restored.restore(saved, at: date.addingTimeInterval(1))
+    #expect(restored.session.eyeElapsed == 0)
+    #expect(restored.session.movementElapsed == 0)
+}
+
+@Test func checkpointDuringLongPauseOrLockRestoresFreshSession() {
+    for agent in [true, false] {
+        var engine = BreakEngine()
+        work(&engine, 3600)
+        if agent { engine.pauseTiming() } else { engine.setAvailable(false) }
+        engine.tick(now: 4000, idle: 0)
+        let date = Date()
+        var restored = BreakEngine()
+        restored.restore(engine.snapshot(at: date), at: date.addingTimeInterval(1))
+        #expect(restored.session.eyeElapsed == 0)
+        #expect(!restored.session.timingPaused)
+        #expect(!restored.session.keepAwakeRequested)
+    }
+}
+
+@Test func waitingForStrongUsesWorkTimeNotWallTime() {
+    var engine = BreakEngine()
+    work(&engine, 2400)
+    engine.waitUntilStrong()
+    engine.tick(now: 2580, idle: 180) // Only 120 seconds count.
+    work(&engine, 1018)
+    engine.tick(now: 3600, idle: 2)
+    #expect(engine.session.movementElapsed < 3600)
+    #expect(engine.reminder == nil)
+    #expect(engine.isWaitingForStrong)
+    work(&engine, 60)
+    engine.tick(now: 3662, idle: 2)
+    #expect(engine.reminder?.strong == true)
+}

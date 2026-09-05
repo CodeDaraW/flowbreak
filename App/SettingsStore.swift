@@ -6,6 +6,8 @@ import FlowBreakCore
 final class SettingsStore: ObservableObject {
     @Published var policy: BreakPolicy { didSet { save() } }
     @Published var language: String { didSet { defaults.set(language, forKey: "language") } }
+    @Published var keepDisplayOn: Bool { didSet { defaults.set(keepDisplayOn, forKey: "keepDisplayOn") } }
+    @Published var reminderScreen: String { didSet { defaults.set(reminderScreen, forKey: "reminderScreen") } }
     @Published private(set) var loadFailed = false
     private let defaults: UserDefaults
     private let key = "breakPolicy.v1"
@@ -20,6 +22,8 @@ final class SettingsStore: ObservableObject {
             loadFailed = data != nil
         }
         language = defaults.string(forKey: "language") ?? "system"
+        keepDisplayOn = defaults.object(forKey: "keepDisplayOn") as? Bool ?? true
+        reminderScreen = defaults.string(forKey: "reminderScreen") ?? "current"
     }
 
     var languageCode: String {

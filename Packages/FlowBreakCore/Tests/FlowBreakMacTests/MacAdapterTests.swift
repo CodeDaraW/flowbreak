@@ -54,3 +54,21 @@ import FlowBreakCore
     #expect(throws: (any Error).self) { _ = try repository.loadSnapshot() }
     #expect(try String(contentsOf: file, encoding: .utf8) == "broken")
 }
+
+@Test func agentSessionOwnsRealPowerAfterHumanTakeover() throws {
+    let power = WakeController()
+    defer { power.stop() }
+    var engine = BreakEngine()
+    try power.startSession(engine: &engine, seconds: 30, agent: true, keepDisplayOn: false)
+    #expect(engine.session.timingPaused)
+    #expect(engine.session.keepAwakeRequested)
+    let id = try #require(power.assertionIDs.first)
+    engine.tick(now: 5, idle: 0)
+    engine.resumeTiming()
+    #expect(!engine.session.timingPaused)
+    #expect(engine.session.keepAwakeRequested)
+    #expect(IOPMAssertionCopyProperties(id) != nil)
+    try power.extendSession(engine: &engine, seconds: 30, keepDisplayOn: false)
+    #expect(engine.wakeEndsAt == 60)
+    #expect(power.isActive)
+}

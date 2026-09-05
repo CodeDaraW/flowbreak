@@ -67,7 +67,7 @@ def main():
     require(keysets[0] == keysets[1], 'English/Chinese localization keys differ')
     used = set()
     for path in (ROOT / 'App').glob('*.swift'):
-        used.update(re.findall(r'(?:text|duration)\("([^"]+)"', path.read_text()))
+        used.update(re.findall(r'(?:text|duration)\("([^"]+)"(?!\s*\+)', path.read_text()))
     require(used <= keysets[0], f'Missing UI keys: {sorted(used - keysets[0])}')
     if errors:
         print('\n'.join(errors), file=sys.stderr)

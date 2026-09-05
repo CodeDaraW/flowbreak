@@ -10,7 +10,7 @@ public struct WorkSession: Codable, Equatable, Sendable {
     public private(set) var movementElapsed: TimeInterval = 0
     public private(set) var activeBreak: BreakKind?
     public private(set) var timingPaused = false
-    // Desired power state only. The future IOKit adapter owns actual assertions.
+    // Desired power state only. The macOS adapter owns actual assertions.
     public private(set) var keepAwakeRequested = false
 
     public init() {}

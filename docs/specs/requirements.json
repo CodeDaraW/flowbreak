@@ -3,125 +3,155 @@
     "id": "FB-001",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0001-bootstrap",
+    "iteration": "0004-reminder-app",
     "implementation": [
-      "App/FlowBreakApp.swift"
+      "App/AppModel.swift",
+      "App/DashboardView.swift",
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "docs/iterations/0001-bootstrap/verification.md"
+      "docs/iterations/0004-reminder-app/verification.md"
     ]
   },
   {
     "id": "FB-002",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0002-scheduler",
+    "iteration": "0004-reminder-app",
     "implementation": [
+      "App/AppModel.swift",
+      "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
+      "docs/iterations/0004-reminder-app/verification.md"
     ]
   },
   {
     "id": "FB-003",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0002-scheduler",
+    "iteration": "0004-reminder-app",
     "implementation": [
+      "App/AppModel.swift",
+      "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
+      "docs/iterations/0004-reminder-app/verification.md"
     ]
   },
   {
     "id": "FB-004",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0002-scheduler",
+    "iteration": "0004-reminder-app",
     "implementation": [
+      "App/AppModel.swift",
+      "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
+      "docs/iterations/0004-reminder-app/verification.md"
     ]
   },
   {
     "id": "FB-005",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0002-scheduler",
+    "iteration": "0004-reminder-app",
     "implementation": [
+      "App/AppModel.swift",
+      "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
+      "docs/iterations/0004-reminder-app/verification.md"
     ]
   },
   {
     "id": "FB-006",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0002-scheduler",
+    "iteration": "0004-reminder-app",
     "implementation": [
+      "App/AppModel.swift",
+      "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
+      "docs/iterations/0004-reminder-app/verification.md"
     ]
   },
   {
     "id": "FB-007",
-    "status": "deferred",
+    "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0001-bootstrap",
-    "implementation": [],
-    "verification": []
+    "iteration": "0004-reminder-app",
+    "implementation": [
+      "App/AppModel.swift",
+      "App/DashboardView.swift",
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
+    ],
+    "verification": [
+      "docs/iterations/0004-reminder-app/verification.md"
+    ],
+    "note": "Manual sharing quiet mode implemented; automatic Feishu detection remains deferred."
   },
   {
     "id": "FB-008",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0002-scheduler",
+    "iteration": "0004-reminder-app",
     "implementation": [
+      "App/AppModel.swift",
+      "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
+      "docs/iterations/0004-reminder-app/verification.md"
     ]
   },
   {
     "id": "FB-009",
-    "status": "planned",
+    "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0001-bootstrap",
-    "implementation": [],
-    "verification": []
+    "iteration": "0004-reminder-app",
+    "implementation": [
+      "App/AppModel.swift",
+      "App/DashboardView.swift",
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
+    ],
+    "verification": [
+      "docs/iterations/0004-reminder-app/verification.md"
+    ]
   },
   {
     "id": "FB-010",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0002-scheduler",
+    "iteration": "0004-reminder-app",
     "implementation": [
+      "App/AppModel.swift",
+      "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
+      "docs/iterations/0004-reminder-app/verification.md"
     ]
   },
   {
     "id": "FB-011",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0001-bootstrap",
+    "iteration": "0004-reminder-app",
     "implementation": [
-      "App/SettingsView.swift",
-      "App/SettingsStore.swift"
+      "App/AppModel.swift",
+      "App/DashboardView.swift",
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "docs/iterations/0001-bootstrap/verification.md"
+      "docs/iterations/0004-reminder-app/verification.md"
     ]
   },
   {
