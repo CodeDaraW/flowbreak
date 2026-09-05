@@ -24,6 +24,9 @@ targets:
     sources: [App]
     dependencies:
       - package: FlowBreakCore
+        product: FlowBreakCore
+      - package: FlowBreakCore
+        product: FlowBreakMac
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.flowbreak.app
