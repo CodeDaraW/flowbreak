@@ -1,0 +1,33 @@
+{
+  "id": "0001-bootstrap",
+  "status": "blocked",
+  "requirements": [
+    "FB-001",
+    "FB-002",
+    "FB-003",
+    "FB-004",
+    "FB-005",
+    "FB-006",
+    "FB-007",
+    "FB-008",
+    "FB-009",
+    "FB-010",
+    "FB-011",
+    "FB-012"
+  ],
+  "decisions": [
+    "docs/decisions/0001-native-foundation.md",
+    "docs/decisions/0002-defer-sharing-detection.md"
+  ],
+  "artifacts": [
+    "plan.md",
+    "tasks.md",
+    "verification.md"
+  ],
+  "blocker": {
+    "code": "BLOCKED_TOOL_GUI",
+    "reason": "Computer Use getApp timed out; automated checks passed, UI acceptance pending.",
+    "owner": "Maintainer / local manual acceptance",
+    "next_action": "Run the GUI checklist in verification.md once UI tooling is available."
+  }
+}

@@ -1,0 +1,130 @@
+[
+  {
+    "id": "FB-001",
+    "status": "partial",
+    "spec": "docs/specs/product.md",
+    "iteration": "0001-bootstrap",
+    "implementation": [
+      "App/FlowBreakApp.swift"
+    ],
+    "verification": [
+      "docs/iterations/0001-bootstrap/verification.md"
+    ]
+  },
+  {
+    "id": "FB-002",
+    "status": "partial",
+    "spec": "docs/specs/product.md",
+    "iteration": "0001-bootstrap",
+    "implementation": [
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/WorkSession.swift"
+    ],
+    "verification": [
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/WorkSessionTests.swift"
+    ]
+  },
+  {
+    "id": "FB-003",
+    "status": "partial",
+    "spec": "docs/specs/product.md",
+    "iteration": "0001-bootstrap",
+    "implementation": [
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/WorkSession.swift"
+    ],
+    "verification": [
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/WorkSessionTests.swift"
+    ]
+  },
+  {
+    "id": "FB-004",
+    "status": "planned",
+    "spec": "docs/specs/product.md",
+    "iteration": "0001-bootstrap",
+    "implementation": [],
+    "verification": []
+  },
+  {
+    "id": "FB-005",
+    "status": "partial",
+    "spec": "docs/specs/product.md",
+    "iteration": "0001-bootstrap",
+    "implementation": [
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/WorkSession.swift"
+    ],
+    "verification": [
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/WorkSessionTests.swift"
+    ]
+  },
+  {
+    "id": "FB-006",
+    "status": "planned",
+    "spec": "docs/specs/product.md",
+    "iteration": "0001-bootstrap",
+    "implementation": [],
+    "verification": []
+  },
+  {
+    "id": "FB-007",
+    "status": "deferred",
+    "spec": "docs/specs/product.md",
+    "iteration": "0001-bootstrap",
+    "implementation": [],
+    "verification": []
+  },
+  {
+    "id": "FB-008",
+    "status": "partial",
+    "spec": "docs/specs/product.md",
+    "iteration": "0001-bootstrap",
+    "implementation": [
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/WorkSession.swift"
+    ],
+    "verification": [
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/WorkSessionTests.swift"
+    ]
+  },
+  {
+    "id": "FB-009",
+    "status": "planned",
+    "spec": "docs/specs/product.md",
+    "iteration": "0001-bootstrap",
+    "implementation": [],
+    "verification": []
+  },
+  {
+    "id": "FB-010",
+    "status": "planned",
+    "spec": "docs/specs/product.md",
+    "iteration": "0001-bootstrap",
+    "implementation": [],
+    "verification": []
+  },
+  {
+    "id": "FB-011",
+    "status": "partial",
+    "spec": "docs/specs/product.md",
+    "iteration": "0001-bootstrap",
+    "implementation": [
+      "App/SettingsView.swift",
+      "App/SettingsStore.swift"
+    ],
+    "verification": [
+      "docs/iterations/0001-bootstrap/verification.md"
+    ]
+  },
+  {
+    "id": "FB-012",
+    "status": "implemented",
+    "spec": "docs/specs/product.md",
+    "iteration": "0001-bootstrap",
+    "implementation": [
+      "AGENTS.md",
+      "scripts/dev.sh",
+      "scripts/check_docs.py",
+      "LICENSE"
+    ],
+    "verification": [
+      "docs/iterations/0001-bootstrap/verification.md"
+    ]
+  }
+]
