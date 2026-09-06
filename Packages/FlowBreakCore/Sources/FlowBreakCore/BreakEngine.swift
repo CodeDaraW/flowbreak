@@ -183,6 +183,10 @@ public struct BreakEngine: Sendable {
         guard sharing != value else { return }
         sharing = value
         if !value {
+            // Sharing recovery recalculates due work, even if its earlier panel was dismissed.
+            nextEyeReminder = 0
+            nextStrongReminder = 0
+            softShown = false
             recoveryUntil = time + policy.sharingRecoveryDelay
             idleEpoch = time
             idleSeconds = 0

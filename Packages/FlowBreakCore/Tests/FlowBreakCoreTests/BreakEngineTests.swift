@@ -456,3 +456,32 @@ private func work(_ engine: inout BreakEngine, _ seconds: Int) {
     #expect(engine.breakDuration == 300)
     #expect(engine.breakRemaining == 270)
 }
+
+@Test func sharingEndReconsidersPreviouslyPresentedDueReminder() throws {
+    var engine = BreakEngine()
+    work(&engine, 3600)
+    engine.tick(now: 3602, idle: 2)
+    engine.markPresented(try #require(engine.reminder))
+    engine.setSharing(true)
+    engine.tick(now: 3612, idle: 12)
+    engine.setSharing(false)
+    engine.tick(now: 3631, idle: 19)
+    #expect(engine.reminder == nil)
+    engine.tick(now: 3632, idle: 20)
+    #expect(engine.reminder == Reminder(eye: true, movement: true, strong: true))
+    engine.markPresented(try #require(engine.reminder))
+    engine.tick(now: 3633, idle: 21)
+    #expect(engine.reminder == nil)
+}
+
+@Test func sharingEndRearmDoesNotEraseAnExplicitSnooze() {
+    var engine = BreakEngine()
+    work(&engine, 3600)
+    engine.snooze(seconds: 300, kind: .eye)
+    engine.setSharing(true)
+    engine.tick(now: 3610, idle: 10)
+    engine.setSharing(false)
+    engine.tick(now: 3630, idle: 20)
+    #expect(engine.reminder == nil)
+    #expect(engine.eyeSnoozeUntil == 3900)
+}

@@ -15,6 +15,7 @@ final class ReminderPresenter {
     private var hideAt: Double = 0
     private var lastTick: Double = 0
     private var expanded = false
+    private var currentReminder: Reminder?
     private var resting = false
     private var outsideMonitor: Any?
     var isVisible: Bool { panel?.isVisible == true }
@@ -24,7 +25,8 @@ final class ReminderPresenter {
     @discardableResult
     func show(_ reminder: Reminder) -> Bool {
         guard let model else { return false }
-        let result = present(AnyView(ReminderView(model: model, reminder: reminder)), height: 450)
+        let result = present(AnyView(ReminderView(model: model, reminder: reminder)), height: reminderHeight(reminder, expanded: false))
+        currentReminder = reminder
         resting = false
         hideAt = model.engine.time + (reminder.strong ? model.settings.strongDuration : model.settings.weakDuration)
         lastTick = model.engine.time
@@ -33,7 +35,13 @@ final class ReminderPresenter {
 
     func showRest() {
         guard let model else { return }
-        _ = present(AnyView(RestContent(model: model).padding(12).background(FlowStyle.canvas, in: RoundedRectangle(cornerRadius: 16))), height: model.engine.session.activeBreak == .movement ? 380 : 310)
+        let fullscreen = model.settings.fullscreenRest && model.engine.session.activeBreak == .movement
+        let content = RestContent(model: model)
+            .frame(maxWidth: fullscreen ? 480 : .infinity)
+            .padding(12)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(FlowStyle.canvas, in: RoundedRectangle(cornerRadius: 16))
+        _ = present(AnyView(content), height: model.engine.session.activeBreak == .movement ? 380 : 310)
         resting = true
         if model.settings.fullscreenRest, model.engine.session.activeBreak == .movement,
            let screen = destinationScreen(model.settings.reminderScreen) {
@@ -54,7 +62,10 @@ final class ReminderPresenter {
         window.isOpaque = false
         window.backgroundColor = .clear
         window.hasShadow = true
-        window.contentView = NSHostingView(rootView: content.preferredColorScheme(model.settings.colorScheme))
+        let hosting = NSHostingView(rootView: content.preferredColorScheme(model.settings.colorScheme))
+        // Window dimensions belong to this presenter, including the optional full-screen frame.
+        hosting.sizingOptions = []
+        window.contentView = hosting
         let frame = screen.visibleFrame
         let corner = model.settings.reminderCorner
         window.setFrameOrigin(NSPoint(x: corner.hasSuffix("Left") ? frame.minX + 20 : frame.maxX - 390,
@@ -67,7 +78,21 @@ final class ReminderPresenter {
         return true
     }
 
-    func setExpanded(_ value: Bool) { expanded = value }
+    func setExpanded(_ value: Bool) {
+        expanded = value
+        guard let panel, let model, let reminder = currentReminder,
+              let screen = destinationScreen(model.settings.reminderScreen) else { return }
+        let height = min(reminderHeight(reminder, expanded: value), screen.visibleFrame.height - 40)
+        var frame = panel.frame
+        if !model.settings.reminderCorner.hasPrefix("bottom") { frame.origin.y += frame.height - height }
+        frame.size.height = height
+        panel.setFrame(frame, display: true)
+    }
+
+    private func reminderHeight(_ reminder: Reminder, expanded: Bool) -> Double {
+        let base: Double = reminder.eye && reminder.movement ? 410 : (reminder.movement ? 370 : 330)
+        return base + (expanded ? 140 : 0)
+    }
 
     func expire(at time: Double) {
         guard isVisible, !resting else { return }
@@ -81,6 +106,7 @@ final class ReminderPresenter {
     func hide() {
         panel?.orderOut(nil)
         panel = nil
+        currentReminder = nil
         expanded = false
         if let outsideMonitor { NSEvent.removeMonitor(outsideMonitor) }
         outsideMonitor = nil
@@ -144,14 +170,14 @@ private struct ReminderView: View {
                         if reminder.eye && reminder.movement {
                             Button(text("reminder.skip.both")) { model.act { $0.skipBoth() } }
                         }
-                        Text(text("reminder.skip.help")).font(.caption).foregroundStyle(.secondary)
+                        Text(text("reminder.skip.help")).font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                     }.padding(.top, 8).buttonStyle(.borderless)
                 }.font(.caption).onChange(of: expanded) { _, value in model.setReminderExpanded(value) }
                 Button(text(reminder.movement ? "movement.done" : "eye.done")) {
                     model.act { $0.markRest(reminder.movement ? .movement : .eye) }
                 }.buttonStyle(.borderless).font(.caption)
-            }.padding(20)
-        }.frame(width: 370, height: 450)
+            }.fixedSize(horizontal: false, vertical: true).padding(20)
+        }.frame(width: 370).frame(maxHeight: .infinity)
             .background(FlowStyle.canvas, in: RoundedRectangle(cornerRadius: 16))
             .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(reminder.strong ? .orange.opacity(0.6) : FlowStyle.border))
     }
