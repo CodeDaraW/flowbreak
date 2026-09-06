@@ -104,3 +104,4 @@
 "event.clockChanged" = "Clock changed; elapsed time preserved";
 "event.restored" = "Previous session restored";
 "status.waiting" = "Waiting for movement threshold";
+"event.movementDeferred" = "Movement deferred until strong threshold";

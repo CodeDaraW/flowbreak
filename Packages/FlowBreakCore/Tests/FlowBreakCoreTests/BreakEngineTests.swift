@@ -188,12 +188,13 @@ private func work(_ engine: inout BreakEngine, _ seconds: Int) {
     #expect(engine.session.movementElapsed == 3600)
 }
 
-@Test func softSkipWaitsUntilStrongInsteadOfResetting() {
+@Test func explicitSoftSkipRestartsMovementOnly() {
     var engine = BreakEngine()
     work(&engine, 2400)
     engine.skip(.movement)
-    #expect(engine.session.movementElapsed == 2400)
-    #expect(engine.snoozeUntil == 3600)
+    #expect(engine.session.movementElapsed == 0)
+    #expect(engine.session.eyeElapsed == 2400)
+    #expect(engine.events.last == "movementSkipped")
 }
 
 @Test func snapshotRoundTripAndClockRollback() throws {
@@ -209,7 +210,7 @@ private func work(_ engine: inout BreakEngine, _ seconds: Int) {
     #expect(restored.snoozeUntil == 9290)
     var late = BreakEngine()
     late.restore(saved, at: date.addingTimeInterval(301))
-    #expect(late.session.eyeElapsed == 0)
+    #expect(late.session.eyeElapsed == 1200)
     var rollback = BreakEngine()
     rollback.restore(saved, at: date.addingTimeInterval(-10))
     #expect(rollback.session.eyeElapsed == 1200)
@@ -270,9 +271,36 @@ private func work(_ engine: inout BreakEngine, _ seconds: Int) {
     work(&engine, 1018)
     engine.tick(now: 3600, idle: 2)
     #expect(engine.session.movementElapsed < 3600)
-    #expect(engine.reminder == nil)
+    #expect(engine.reminder?.eye == true)
+    #expect(engine.reminder?.movement == false)
     #expect(engine.isWaitingForStrong)
     work(&engine, 60)
     engine.tick(now: 3662, idle: 2)
     #expect(engine.reminder?.strong == true)
+}
+
+@Test func waitingForMovementDoesNotSilenceDueEyes() throws {
+    var engine = BreakEngine()
+    work(&engine, 2400)
+    engine.tick(now: 2402, idle: 2)
+    engine.markPresented(try #require(engine.reminder))
+    engine.waitUntilStrong()
+    #expect(engine.snoozeUntil == 0)
+    #expect(engine.reminder?.eye == true)
+    #expect(engine.reminder?.movement == false)
+    engine.snooze(seconds: 180)
+    #expect(engine.reminder == nil)
+}
+
+@Test func dismissedEyeReminderWaitsForExplicitSnooze() throws {
+    var engine = BreakEngine()
+    work(&engine, 1200)
+    engine.tick(now: 1202, idle: 2)
+    engine.markPresented(try #require(engine.reminder))
+    work(&engine, 610)
+    engine.tick(now: 1814, idle: 2)
+    #expect(engine.reminder == nil)
+    engine.snooze(seconds: 3)
+    engine.tick(now: 1817, idle: 5)
+    #expect(engine.reminder?.eye == true)
 }

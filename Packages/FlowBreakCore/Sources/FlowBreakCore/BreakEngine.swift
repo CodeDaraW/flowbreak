@@ -66,8 +66,8 @@ public struct BreakEngine: Sendable {
     public var wakeRemaining: Double? { wakeEndsAt.map { max(0, $0 - time) } }
     public var automaticallySuppressed: Bool {
         !available || sharing || session.timingPaused || session.activeBreak != nil
-            || idleSeconds >= policy.idlePauseThreshold || (time < snoozeUntil && !waitForStrong)
-            || isWaitingForStrong || time < recoveryUntil
+            || idleSeconds >= policy.idlePauseThreshold || time < snoozeUntil
+            || time < recoveryUntil
     }
 
     public mutating func updatePolicy(_ value: BreakPolicy) {
@@ -176,19 +176,19 @@ public struct BreakEngine: Sendable {
     public var reminder: Reminder? {
         guard !automaticallySuppressed, idleSeconds >= 2 else { return nil }
         let eyeDue = session.eyeElapsed >= policy.eyeInterval
-        let movementDue = session.movementElapsed >= policy.movementSoftInterval
+        let movementDue = session.movementElapsed >= policy.movementSoftInterval && !isWaitingForStrong
         let strong = session.movementElapsed >= policy.movementStrongInterval
         let newEye = eyeDue && time >= nextEyeReminder
         let newMovement = movementDue && (strong ? time >= nextStrongReminder : !softShown)
         guard newEye || newMovement else { return nil }
-        if !movementDue && eyeDue && policy.movementSoftInterval - session.movementElapsed <= policy.mergeWindow {
+        if session.movementElapsed < policy.movementSoftInterval && eyeDue && policy.movementSoftInterval - session.movementElapsed <= policy.mergeWindow {
             return nil
         }
         return Reminder(eye: eyeDue, movement: movementDue, strong: strong)
     }
 
     public mutating func markPresented(_ reminder: Reminder) {
-        if reminder.eye { nextEyeReminder = time + 600 }
+        if reminder.eye { nextEyeReminder = Double.greatestFiniteMagnitude }
         if reminder.movement {
             softShown = true
             if reminder.strong { nextStrongReminder = time + 600; waitForStrong = false }
@@ -207,8 +207,11 @@ public struct BreakEngine: Sendable {
     }
 
     public mutating func waitUntilStrong() {
-        snooze(seconds: max(1, policy.movementStrongInterval - session.movementElapsed))
+        guard session.movementElapsed < policy.movementStrongInterval else { return }
         waitForStrong = true
+        softShown = true
+        nextEyeReminder = 0
+        record("movementDeferred")
     }
 
     public mutating func beginBreak(_ kind: BreakKind) {
@@ -233,11 +236,6 @@ public struct BreakEngine: Sendable {
     }
 
     public mutating func skip(_ kind: BreakKind) {
-        // Soft movement suggestions are dismissed, never skipped as a completed cycle.
-        if kind == .movement && session.movementElapsed < policy.movementStrongInterval {
-            waitUntilStrong()
-            return
-        }
         captureUndo(resetEye: kind == .eye, resetMovement: kind == .movement)
         session.skip(kind)
         clearReminder(kind)
@@ -323,9 +321,8 @@ public struct BreakEngine: Sendable {
         }
         let gap = date.timeIntervalSince(saved.savedAt)
         guard gap.isFinite else { record("snapshotRejected"); return }
-        if gap >= policy.naturalRestThreshold { record("restartRest"); return }
         session.setAccumulation(eye: saved.eye, movement: saved.movement)
-        snoozeUntil = time + max(0, saved.snoozeRemaining - max(0, gap))
+        snoozeUntil = saved.waitForStrong == true ? 0 : time + max(0, saved.snoozeRemaining - max(0, gap))
         nextEyeReminder = time + max(0, saved.eyeRepeatRemaining - max(0, gap))
         nextStrongReminder = time + max(0, saved.strongRepeatRemaining - max(0, gap))
         softShown = saved.softShown

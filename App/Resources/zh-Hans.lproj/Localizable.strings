@@ -104,3 +104,4 @@
 "event.clockChanged" = "系统时间变化，保留累计";
 "event.restored" = "恢复上次计时";
 "status.waiting" = "等待起身强提醒";
+"event.movementDeferred" = "起身等待强提醒，护眼照常";
