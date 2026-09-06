@@ -1,0 +1,7 @@
+{
+  "id": "0007-focus-quiet",
+  "status": "active",
+  "requirements": ["FB-007", "FB-009", "FB-011"],
+  "decisions": [],
+  "artifacts": ["plan.md", "tasks.md", "verification.md"]
+}
