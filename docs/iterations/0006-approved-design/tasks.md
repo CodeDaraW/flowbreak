@@ -6,7 +6,7 @@
 - [x] D4 Implement sidebar settings, reminders and active-rest panels (FB-005, FB-006, FB-009, FB-011).
 - [ ] D5 Run make check and Computer Use acceptance; archive screenshots and update requirement evidence.
 
-- [ ] D6 Complete remaining ordinary GUI regression: hover-only dismissal pause, strong-repeat observation and snooze/clear combinations. Deliberate input, expanded dismissal pause, end edit, full-screen rest and settings restart have evidence; platform tests are handled by D9.
+- [ ] D6 Complete remaining ordinary GUI regression: hover-only dismissal pause. Strong-repeat and merged snooze/clear/undo/restart combinations gained native evidence in the 2026-09-07 continuation. Deliberate input, expanded dismissal pause, end edit, full-screen rest and settings restart have evidence; platform tests are handled by D9.
 
 - [x] D7 Audit all 13 r02 pages; reconcile per-cycle snooze persistence, 2-minute extension, specific undo labels, deadline/next-reminder information and pre-start power configuration. See design-audit.md; 50 tests/build passed.
 
