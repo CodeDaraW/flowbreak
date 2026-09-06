@@ -34,6 +34,8 @@ public struct BreakEngine: Sendable {
     public private(set) var idleSeconds: Double = 0
     public private(set) var available = true
     public private(set) var sharing = false
+    public private(set) var focusQuiet = false
+    public var notificationsQuiet: Bool { sharing || focusQuiet }
     public private(set) var eyeSnoozeUntil: Double = 0
     public private(set) var movementSnoozeUntil: Double = 0
     public var snoozeUntil: Double { max(eyeSnoozeUntil, movementSnoozeUntil) }
@@ -81,7 +83,7 @@ public struct BreakEngine: Sendable {
     public var breakRemaining: Double { max(0, (breakEndsAt ?? time) - time) }
     public var wakeRemaining: Double? { wakeEndsAt.map { max(0, $0 - time) } }
     public var automaticallySuppressed: Bool {
-        !available || sharing || session.timingPaused || session.activeBreak != nil
+        !available || notificationsQuiet || session.timingPaused || session.activeBreak != nil
             || idleSeconds >= policy.idlePauseThreshold || time < snoozeUntil
             || time < recoveryUntil
     }
@@ -181,9 +183,22 @@ public struct BreakEngine: Sendable {
 
     public mutating func setSharing(_ value: Bool) {
         guard sharing != value else { return }
+        let wasQuiet = notificationsQuiet
         sharing = value
-        if !value {
-            // Sharing recovery recalculates due work, even if its earlier panel was dismissed.
+        recoverFromQuiet(wasQuiet: wasQuiet)
+        record(value ? "sharingStarted" : "sharingEnded")
+    }
+
+    public mutating func setFocusQuiet(_ value: Bool) {
+        guard focusQuiet != value else { return }
+        let wasQuiet = notificationsQuiet
+        focusQuiet = value
+        recoverFromQuiet(wasQuiet: wasQuiet)
+        record(value ? "focusQuietStarted" : "focusQuietEnded")
+    }
+
+    private mutating func recoverFromQuiet(wasQuiet: Bool) {
+        if wasQuiet && !notificationsQuiet {
             nextEyeReminder = 0
             nextStrongReminder = 0
             softShown = false
@@ -191,7 +206,6 @@ public struct BreakEngine: Sendable {
             idleEpoch = time
             idleSeconds = 0
         }
-        record(value ? "sharingStarted" : "sharingEnded")
     }
 
     public var reminder: Reminder? {
@@ -210,7 +224,7 @@ public struct BreakEngine: Sendable {
 
     /// Assumes continued work; presentation still waits for the input grace and all gates.
     public var nextReminderEstimate: ReminderEstimate? {
-        guard available, !sharing, !session.timingPaused, session.activeBreak == nil,
+        guard available, !notificationsQuiet, !session.timingPaused, session.activeBreak == nil,
               idleSeconds < policy.idlePauseThreshold else { return nil }
         var eyeDelay = nextEyeReminder == Double.greatestFiniteMagnitude ? Double.infinity
             : max(0, policy.eyeInterval - session.eyeElapsed)

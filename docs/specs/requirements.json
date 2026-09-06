@@ -98,15 +98,17 @@
     "id": "FB-007",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0006-approved-design",
+    "iteration": "0007-focus-quiet",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
-      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift",
+      "App/FocusQuietFilter.swift"
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
-      "docs/iterations/0006-approved-design/verification.md"
+      "docs/iterations/0006-approved-design/verification.md",
+      "docs/iterations/0007-focus-quiet/verification.md"
     ],
     "note": "Manual sharing quiet mode implemented; automatic Feishu detection remains deferred."
   },

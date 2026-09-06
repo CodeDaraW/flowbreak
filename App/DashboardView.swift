@@ -96,6 +96,7 @@ struct DashboardView: View {
                         }.padding(.top, 8)
                     }.font(.caption)
                 }
+                if model.engine.focusQuiet { notice(text(model.focusStatusKey), symbol: "moon.fill", color: .blue) }
                 if model.engine.sharing { notice(text("sharing.active"), symbol: "rectangle.on.rectangle.slash", color: .blue) }
                 Divider()
                 HStack {

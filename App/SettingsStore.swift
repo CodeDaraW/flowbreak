@@ -5,6 +5,7 @@ import FlowBreakCore
 
 @MainActor
 final class SettingsStore: ObservableObject {
+    @Published var followFocus: Bool { didSet { defaults.set(followFocus, forKey: "followFocus") } }
     @Published var policy: BreakPolicy { didSet { save() } }
     @Published var appearance: String { didSet { defaults.set(appearance, forKey: "appearance") } }
     @Published var language: String { didSet { defaults.set(language, forKey: "language") } }
@@ -36,6 +37,7 @@ final class SettingsStore: ObservableObject {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
+        followFocus = defaults.object(forKey: "followFocus") as? Bool ?? true
         let data = defaults.data(forKey: "breakPolicy.v1")
         if let data, let saved = try? JSONDecoder().decode(BreakPolicy.self, from: data), saved.isValid {
             policy = saved

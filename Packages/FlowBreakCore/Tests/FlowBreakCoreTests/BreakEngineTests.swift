@@ -485,3 +485,62 @@ private func work(_ engine: inout BreakEngine, _ seconds: Int) {
     #expect(engine.reminder == nil)
     #expect(engine.eyeSnoozeUntil == 3900)
 }
+
+@Test func focusQuietSuppressesRemindersWithoutStoppingActiveWork() {
+    var engine = BreakEngine()
+    engine.setFocusQuiet(true)
+    work(&engine, 3600)
+    #expect(engine.session.movementElapsed == 3600)
+    #expect(engine.reminder == nil)
+    #expect(engine.nextReminderEstimate == nil)
+    engine.setFocusQuiet(false)
+    engine.tick(now: 3619, idle: 19)
+    #expect(engine.reminder == nil)
+    engine.tick(now: 3620, idle: 20)
+    #expect(engine.reminder == Reminder(eye: true, movement: true, strong: true))
+}
+
+@Test func focusAndManualQuietRecoverOnlyAfterLastSourceEnds() {
+    var engine = BreakEngine()
+    work(&engine, 3600)
+    engine.setSharing(true)
+    engine.setFocusQuiet(true)
+    engine.setSharing(false)
+    engine.tick(now: 3620, idle: 20)
+    #expect(engine.notificationsQuiet)
+    #expect(engine.reminder == nil)
+    engine.setSharing(true)
+    engine.setFocusQuiet(false)
+    engine.tick(now: 3640, idle: 20)
+    #expect(engine.notificationsQuiet)
+    #expect(engine.reminder == nil)
+    engine.setSharing(false)
+    engine.tick(now: 3659, idle: 19)
+    #expect(engine.reminder == nil)
+    engine.tick(now: 3660, idle: 20)
+    #expect(engine.reminder?.strong == true)
+}
+
+@Test func focusRecoveryPreservesExplicitSnooze() {
+    var engine = BreakEngine()
+    work(&engine, 3600)
+    engine.snooze(seconds: 300, kind: .eye)
+    engine.setFocusQuiet(true)
+    engine.tick(now: 3610, idle: 10)
+    engine.setFocusQuiet(false)
+    engine.tick(now: 3630, idle: 20)
+    #expect(engine.eyeSnoozeUntil == 3900)
+    #expect(engine.reminder == nil)
+}
+
+@Test func focusQuietStillHonorsNaturalIdleReset() {
+    var engine = BreakEngine()
+    work(&engine, 600)
+    engine.setFocusQuiet(true)
+    engine.tick(now: 900, idle: 300)
+    #expect(engine.session.movementElapsed == 720)
+    engine.tick(now: 901, idle: 0)
+    #expect(engine.session.eyeElapsed == 0)
+    #expect(engine.session.movementElapsed == 0)
+    #expect(engine.notificationsQuiet)
+}

@@ -16,10 +16,9 @@
 "idle.pause" = "Idle pause threshold";
 "idle.reset" = "Natural rest reset threshold";
 "merge.window" = "Reminder merge window";
-"sharing.delay" = "Post-sharing delay";
+"sharing.delay" = "Quiet-mode recovery delay";
 "settings.invalid" = "Not saved: use positive values; gentle < strong, pause < reset, eye duration ≤ movement duration, merge window < eye interval.";
 "settings.recovery" = "Saved settings could not be loaded; defaults are in use.";
-"sharing.unavailable" = "Automatic Feishu sharing detection: not implemented.";
 "settings.reset" = "Restore defaults";
 "status.unavailable" = "System paused";
 "status.paused" = "Timing paused";
@@ -45,7 +44,7 @@
 "eye.skip" = "Skip this eye break";
 "movement.skip" = "Skip this movement break";
 "movement.wait" = "Wait until strong reminder";
-"sharing.manual" = "Manual sharing quiet mode";
+"sharing.manual" = "Manual quiet mode";
 "sharing.help" = "Enable while sharing: timers continue, all automatic reminders stay hidden.";
 "history.title" = "Recent activity";
 "history.empty" = "No activity yet";
@@ -112,7 +111,7 @@
 "wake.summary" = "Prevent idle sleep";
 "rest.mark.help" = "Marking movement rest resets both timers. No countdown starts.";
 "movement.wait.help" = "Movement waits for the strong threshold. Eye reminders continue.";
-"sharing.active" = "Manual sharing quiet mode is on. Timers continue.";
+"sharing.active" = "Manual quiet mode is on. Timers continue.";
 "timer.accumulated" = "Accumulated use";
 "timer.due" = "Break due";
 "timer.soft" = "Ready when you are";
@@ -180,3 +179,17 @@
 "status.movementSoft" = "Ready to move";
 "status.eyeDue" = "Eye rest due";
 "status.soon" = "Reminder soon";
+
+"focus.filter.title" = "Quiet break reminders";
+"focus.filter.description" = "Silence automatic FlowBreak reminders while this Focus is active.";
+"focus.filter.parameter" = "Silence reminders";
+"focus.follow" = "Follow Do Not Disturb filter";
+"focus.checking" = "Checking Focus filter";
+"focus.active" = "Focus quiet is active";
+"focus.inactive" = "Filter inactive or not configured";
+"focus.disabled" = "Focus integration is off";
+"focus.unavailable" = "Focus status unavailable · reminders quiet";
+"focus.setup" = "One-time setup: System Settings → Focus → Do Not Disturb → Add Filter → FlowBreak. Enable Silence reminders. Add it only to Do Not Disturb if other Focus modes should not silence breaks.";
+"focus.openSettings" = "Open Focus settings";
+"event.focusQuietStarted" = "Focus quiet started";
+"event.focusQuietEnded" = "Focus quiet ended";

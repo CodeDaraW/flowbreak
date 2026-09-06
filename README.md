@@ -6,7 +6,7 @@
 
 **当前状态：可运行的开发版。** 已接入双语菜单栏、双计时、非阻断提醒、合并/延迟/跳过、主动/补记休息与撤销、原生空闲检测、保持唤醒与 Agent 模式、睡眠事件、快照和最近事件记录。启动后即开始计时；保持唤醒仅在主动开启后生效。
 
-飞书共享自动检测仍延期，共享前需手动开启“共享静默”。窗口焦点、全屏 Space、锁屏/多屏和 macOS 14 真机体验仍待实测，详见当前迭代的验证记录。
+自动静默改为跟随系统勿扰过滤条件，当前实现已接入，真实联动被开发签名阻塞，仍可使用手动静默。外接屏、macOS 14、声音及跨 Space 已经用户确认留待日常反馈；详见当前迭代的验证记录。
 
 ## 本地开发
 
@@ -39,7 +39,7 @@ SwiftPM 报 `sandbox_apply: Operation not permitted` 表示运行环境限制，
 
 ## AI 与贡献者入口
 
-先读 [AGENTS.md](AGENTS.md)，再读 [文档工作流](docs/README.md) 和 [当前迭代](docs/iterations/0006-approved-design/plan.md)。所有行为变更必须先关联规格，再记录实现与验证；重要决策进入 ADR。
+先读 [AGENTS.md](AGENTS.md)，再读 [文档工作流](docs/README.md) 和 [当前迭代](docs/iterations/0007-focus-quiet/plan.md)。所有行为变更必须先关联规格，再记录实现与验证；重要决策进入 ADR。
 
 - `App/`：SwiftUI 菜单栏与设置、macOS 集成入口。
 - `Packages/FlowBreakCore/`：确定性规则，不含 UI、IOKit 和真实时钟。
@@ -57,3 +57,9 @@ SwiftPM 报 `sandbox_apply: Operation not permitted` 表示运行环境限制，
 ## 原生 E2E 隔离入口（仅 Debug）
 
 构建后可使用 `open .build/DerivedData/Build/Products/Debug/FlowBreak.app --args --e2e-workspace /absolute/path/to/test-session`。先退出已有实例。该入口打开同一主界面的普通窗口以便原生可访问性工具连接，计时和系统接口不替换；运行数据写入指定目录，设置使用独立测试 suite。Release 忽略该参数。测试结束退出后，正常 `make run` 恢复日常数据。
+
+## 勿扰联动（开发签名后待系统验收）
+
+采用 macOS 官方 Focus Filter。在系统设置 → 专注模式 → 勿扰 → 添加过滤条件中选择 FlowBreak，开启“静默提醒”。只在勿扰中添加即可避免其他专注模式也触发静默。应用设置可关闭联动；手动静默独立有效。
+
+当前 `make run` 使用临时签名。本机 macOS 26.6.2 虽能列出过滤条件，但保存时 App Intents 服务因缺少 Team ID 拒绝连接；不可将过滤条件可见当作功能已完成。先在 Xcode → Settings → Accounts 配置 Apple ID 和开发团队，再以实际开发身份签名构建产物（不能使用 `--sign -`），才能继续系统验收。签名证书和团队配置保留本机，不提交仓库。macOS 14 的系统联动仍待用户设备验证。

@@ -1,7 +1,17 @@
 {
   "id": "0007-focus-quiet",
   "status": "active",
-  "requirements": ["FB-007", "FB-009", "FB-011"],
-  "decisions": [],
-  "artifacts": ["plan.md", "tasks.md", "verification.md"]
+  "requirements": [
+    "FB-007",
+    "FB-009",
+    "FB-011"
+  ],
+  "decisions": [
+    "docs/decisions/0005-focus-filter.md"
+  ],
+  "artifacts": [
+    "plan.md",
+    "tasks.md",
+    "verification.md"
+  ]
 }

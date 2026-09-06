@@ -91,7 +91,14 @@ struct SettingsView: View {
             }
             Text(settings.text("reminder.nonblocking")).font(.callout).foregroundStyle(.secondary)
             Toggle(settings.text("sharing.manual"), isOn: Binding(get: { model.engine.sharing }, set: { value in model.act { $0.setSharing(value) } }))
-            Text(settings.text("sharing.unavailable")).font(.caption).foregroundStyle(.secondary)
+            FlowCard {
+                VStack(alignment: .leading, spacing: 12) {
+                    Toggle(settings.text("focus.follow"), isOn: $settings.followFocus)
+                    Text(settings.text(model.focusStatusKey)).font(.callout)
+                    Text(settings.text("focus.setup")).font(.caption).foregroundStyle(.secondary)
+                    Button(settings.text("focus.openSettings")) { model.openFocusSettings() }
+                }
+            }
         case "settings.displays":
             FlowCard {
                 Picker(settings.text("screen.title"), selection: $settings.reminderScreen) {

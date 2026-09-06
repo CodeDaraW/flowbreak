@@ -16,10 +16,9 @@
 "idle.pause" = "无操作暂停阈值";
 "idle.reset" = "自然休息重置阈值";
 "merge.window" = "提醒合并窗口";
-"sharing.delay" = "共享结束缓冲";
+"sharing.delay" = "静默结束缓冲";
 "settings.invalid" = "尚未保存：须为正数；轻提醒早于强提醒，暂停早于重置，护眼时长不超过起身时长，合并窗口短于护眼间隔。";
 "settings.recovery" = "已有设置无法读取，当前使用默认值。";
-"sharing.unavailable" = "飞书共享自动识别：尚未实现。";
 "settings.reset" = "恢复默认参数";
 "status.unavailable" = "系统暂停";
 "status.paused" = "计时已暂停";
@@ -45,7 +44,7 @@
 "eye.skip" = "跳过本次护眼";
 "movement.skip" = "跳过本次起身";
 "movement.wait" = "到强提醒时间再提醒";
-"sharing.manual" = "手动共享静默";
+"sharing.manual" = "手动静默";
 "sharing.help" = "共享时请手动开启：继续计时，隐藏所有自动提醒。";
 "history.title" = "最近记录";
 "history.empty" = "暂无记录";
@@ -112,7 +111,7 @@
 "wake.summary" = "防止自动睡眠";
 "rest.mark.help" = "补记起身同时重置两项计时，不启动倒计时。";
 "movement.wait.help" = "起身等待强提醒，护眼照常提醒。";
-"sharing.active" = "手动共享静默已开启，计时继续。";
+"sharing.active" = "手动静默已开启，计时继续。";
 "timer.accumulated" = "已累计使用";
 "timer.due" = "该休息了";
 "timer.soft" = "可以起身活动";
@@ -180,3 +179,17 @@
 "status.movementSoft" = "可以起身";
 "status.eyeDue" = "该护眼了";
 "status.soon" = "即将提醒";
+
+"focus.filter.title" = "静默休息提醒";
+"focus.filter.description" = "此专注模式开启时静默 FlowBreak 自动提醒。";
+"focus.filter.parameter" = "静默提醒";
+"focus.follow" = "跟随勿扰过滤条件";
+"focus.checking" = "正在读取勿扰联动";
+"focus.active" = "勿扰联动静默中";
+"focus.inactive" = "过滤条件未激活或尚未配置";
+"focus.disabled" = "勿扰联动已关闭";
+"focus.unavailable" = "无法读取勿扰联动状态 · 已保守静默";
+"focus.setup" = "一次配置：系统设置 → 专注模式 → 勿扰 → 添加过滤条件 → FlowBreak，开启“静默提醒”。如其他专注模式无需静默，请只添加到勿扰。";
+"focus.openSettings" = "打开专注模式设置";
+"event.focusQuietStarted" = "勿扰联动静默开始";
+"event.focusQuietEnded" = "勿扰联动静默结束";

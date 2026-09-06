@@ -3,6 +3,7 @@ import SwiftUI
 import Combine
 import FlowBreakCore
 import FlowBreakMac
+import AppIntents
 
 @MainActor
 final class AppModel: ObservableObject {
@@ -12,6 +13,9 @@ final class AppModel: ObservableObject {
     @Published private(set) var errorKey: String?
     @Published private(set) var lastEvent: String?
     @Published private(set) var screens: [NSScreen] = NSScreen.screens
+    @Published private(set) var focusStatusKey = "focus.checking"
+    private var focusReadInFlight = false
+    private var lastFocusRead = -Double.infinity
     private let power = WakeController()
     private var repository: SessionRepository?
     private var storageWritable = true
@@ -34,6 +38,7 @@ final class AppModel: ObservableObject {
     var statusKey: String {
         if !engine.available { return "status.unavailable" }
         if engine.session.timingPaused { return "status.paused" }
+        if engine.focusQuiet { return focusStatusKey }
         if engine.sharing { return "status.sharing" }
         if engine.session.activeBreak != nil { return "status.resting" }
         if engine.idleSeconds >= engine.policy.idlePauseThreshold { return "status.idle" }
@@ -47,7 +52,7 @@ final class AppModel: ObservableObject {
     }
 
     var symbol: String {
-        if engine.sharing { return "leaf" }
+        if engine.notificationsQuiet { return "leaf" }
         if engine.session.timingPaused { return "pause.circle" }
         if engine.session.activeBreak != nil { return "leaf.fill" }
         if engine.session.movementElapsed >= engine.policy.movementStrongInterval { return "figure.walk.circle.fill" }
@@ -60,6 +65,7 @@ final class AppModel: ObservableObject {
     func start() {
         guard timer == nil else { return }
         engine = BreakEngine(now: now, policy: settings.policy)
+        if settings.followFocus { engine.setFocusQuiet(true) }
         do {
             let store = try SessionRepository(directory: AcceptanceSession.directory)
             repository = store
@@ -115,6 +121,7 @@ final class AppModel: ObservableObject {
     }
 
     func pulse(present: Bool = true, ownAction: Bool = false) {
+        refreshFocusIfNeeded()
         engine.updatePolicy(settings.policy)
         engine.strongRepeatInterval = settings.strongRepeat
         let idle = SystemActivity.idleSeconds()
@@ -130,7 +137,7 @@ final class AppModel: ObservableObject {
         }
         collectEvents()
         if engine.automaticallySuppressed { panel?.hide() }
-        if engine.session.activeBreak == nil || engine.sharing || !engine.available { restPanel?.hide() }
+        if engine.session.activeBreak == nil || engine.notificationsQuiet || !engine.available { restPanel?.hide() }
         panel?.expire(at: engine.time)
         if present, idle != nil, let reminder = engine.reminder, panel?.isVisible != true {
             if panel?.show(reminder) == true {
@@ -141,12 +148,51 @@ final class AppModel: ObservableObject {
         if engine.time - checkpoint >= 15 { persist() }
     }
 
+    private func refreshFocusIfNeeded() {
+        if !settings.followFocus {
+            focusStatusKey = "focus.disabled"
+            engine.setFocusQuiet(false)
+            return
+        }
+        guard !focusReadInFlight, now - lastFocusRead >= 2 else { return }
+        focusReadInFlight = true
+        lastFocusRead = now
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            var quiet = false
+            var status = "focus.inactive"
+            do {
+                quiet = try await FocusQuietFilter.current.quiet
+                status = quiet ? "focus.active" : "focus.inactive"
+            } catch SetFocusFilterIntentError.notFound {
+                status = "focus.inactive"
+            } catch {
+                quiet = true
+                status = "focus.unavailable"
+            }
+            focusReadInFlight = false
+            guard settings.followFocus else { return }
+            engine.tick(now: now, idle: SystemActivity.idleSeconds() ?? 0,
+                        restInputIdle: SystemActivity.restInputIdleSeconds())
+            engine.setFocusQuiet(quiet)
+            focusStatusKey = status
+            if engine.notificationsQuiet { panel?.hide(); restPanel?.hide() }
+            collectEvents()
+        }
+    }
+
+    func openFocusSettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.Focus-Settings.extension") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
     func act(_ action: (inout BreakEngine) -> Void) {
         pulse(present: false, ownAction: true)
         panel?.hide()
         action(&engine)
         restPanel?.hide()
-        if engine.session.activeBreak != nil && !engine.sharing { restPanel?.showRest() }
+        if engine.session.activeBreak != nil && !engine.notificationsQuiet { restPanel?.showRest() }
         if !engine.session.keepAwakeRequested { power.stop() }
         collectEvents()
         persist()
@@ -185,7 +231,7 @@ final class AppModel: ObservableObject {
 
     private func collectEvents() {
         let events = engine.drainEvents()
-        if events.contains("breakCompleted"), settings.completionSound, !engine.sharing, engine.available { NSSound(named: "Glass")?.play() }
+        if events.contains("breakCompleted"), settings.completionSound, !engine.notificationsQuiet, engine.available { NSSound(named: "Glass")?.play() }
         if let last = events.last { lastEvent = last }
         history.append(contentsOf: events.map { ActivityEvent(date: Date(), kind: $0) })
         if history.count > 1000 { history.removeFirst(history.count - 1000) }
