@@ -42,3 +42,7 @@
 ## 当前实现约定与剩余验收
 
 输入缓冲 2 秒、事件保留 1000 条、撤销最近一次手动补记/跳过、非激活浮层和手动共享静默已采用 ADR-0003 的规则。非阻断浮层在各 Space 下的键盘/点击行为、锁屏与多屏仍需真机验收。飞书检测决策见 [ADR-0002](../decisions/0002-defer-sharing-detection.md)。自动共享识别不在当前开发版内，不能宣称已支持。
+
+## Approved design baseline (2026-09-07)
+
+r02 passed the user-authorized external design review. Native implementation follows [ADR-0004](../decisions/0004-approved-design.md) and [iteration 0006](../iterations/0006-approved-design/plan.md). Waiting for the strong movement threshold does not silence eye reminders. Explicit skip restarts its own cycle, including soft movement. Unknown app downtime preserves saved work; only observed absence proves natural rest. Weak eye reminders do not automatically repeat periodically after dismissal. Hover and expanded actions pause panel auto-dismissal.
