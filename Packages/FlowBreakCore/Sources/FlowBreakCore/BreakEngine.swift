@@ -37,12 +37,14 @@ public struct BreakEngine: Sendable {
     private var idleEpoch: Double = 0
     private var recoveryUntil: Double = 0
     private var nextEyeReminder: Double = 0
+    public var strongRepeatInterval: Double = 600
     private var nextStrongReminder: Double = 0
     private var softShown = false
     private var waitForStrong = false
     private var undoState: UndoState?
 
     private struct UndoState: Sendable {
+        var expiresAt: Double
         var eye: Double
         var movement: Double
         var resetEye: Bool
@@ -61,7 +63,8 @@ public struct BreakEngine: Sendable {
     }
 
     public var isWaitingForStrong: Bool { waitForStrong && session.movementElapsed < policy.movementStrongInterval }
-    public var canUndo: Bool { undoState != nil }
+    public var canUndo: Bool { undoState.map { time < $0.expiresAt } ?? false }
+    public var breakDuration: Double { max(0, (breakEndsAt ?? time) - (breakStartedAt ?? time)) }
     public var breakRemaining: Double { max(0, (breakEndsAt ?? time) - time) }
     public var wakeRemaining: Double? { wakeEndsAt.map { max(0, $0 - time) } }
     public var automaticallySuppressed: Bool {
@@ -75,11 +78,12 @@ public struct BreakEngine: Sendable {
     }
 
     /// Sampling interval can vary. idleSeconds is time since the latest input event.
-    public mutating func tick(now: Double, idle: Double) {
+    public mutating func tick(now: Double, idle: Double, restInputIdle: Double? = nil) {
         guard now.isFinite, now >= time, idle.isFinite, idle >= 0 else { return }
         let start = time
         let delta = now - start
         let lastInput = now - idle
+        let restInput = restInputIdle.map { now - max(0, $0) } ?? lastInput
         let inputOccurred = lastInput > start + 0.001
         let previousIdle = idleSeconds
         idleSeconds = min(idle, max(0, now - idleEpoch))
@@ -94,7 +98,7 @@ public struct BreakEngine: Sendable {
         var cursor = start
         if let expiry = wakeEndsAt, expiry <= now {
             if session.timingPaused {
-                integrate(from: cursor, to: max(cursor, expiry), lastInput: lastInput)
+                integrate(from: cursor, to: max(cursor, expiry), lastInput: restInput)
                 time = max(cursor, expiry)
                 stopKeepAwake()
                 resumeTiming()
@@ -114,7 +118,7 @@ public struct BreakEngine: Sendable {
                 session.advance(by: max(0, min(now - cursor, policy.idlePauseThreshold - previousIdle)))
             }
         } else {
-            integrate(from: cursor, to: now, lastInput: lastInput)
+            integrate(from: cursor, to: now, lastInput: restInput)
         }
         time = now
         // Silence long-return notifications for a short settling period.
@@ -191,7 +195,7 @@ public struct BreakEngine: Sendable {
         if reminder.eye { nextEyeReminder = Double.greatestFiniteMagnitude }
         if reminder.movement {
             softShown = true
-            if reminder.strong { nextStrongReminder = time + 600; waitForStrong = false }
+            if reminder.strong { nextStrongReminder = time + (strongRepeatInterval.isFinite && strongRepeatInterval > 0 ? strongRepeatInterval : 600); waitForStrong = false }
         }
         record(reminder.strong ? "strongReminder" : "gentleReminder")
     }
@@ -223,6 +227,12 @@ public struct BreakEngine: Sendable {
         record(kind == .eye ? "eyeStarted" : "movementStarted")
     }
 
+    public mutating func extendBreak(seconds: Double) {
+        guard session.activeBreak != nil, let end = breakEndsAt, seconds.isFinite, seconds > 0 else { return }
+        breakEndsAt = end + seconds
+        record("breakExtended")
+    }
+
     public mutating func cancelBreak() {
         session.interruptBreak()
         breakStartedAt = nil
@@ -242,8 +252,18 @@ public struct BreakEngine: Sendable {
         record(kind == .eye ? "eyeSkipped" : "movementSkipped")
     }
 
+    public mutating func skipBoth() {
+        captureUndo(resetEye: true, resetMovement: true)
+        session.skip(.eye)
+        session.skip(.movement)
+        clearReminder(.eye)
+        clearReminder(.movement)
+        record("eyeSkipped")
+        record("movementSkipped")
+    }
+
     public mutating func undo() {
-        guard let saved = undoState else { return }
+        guard canUndo, let saved = undoState else { return }
         session.setAccumulation(
             eye: session.eyeElapsed + (saved.resetEye ? saved.eye : 0),
             movement: session.movementElapsed + (saved.resetMovement ? saved.movement : 0))
@@ -338,7 +358,7 @@ public struct BreakEngine: Sendable {
     }
 
     private mutating func captureUndo(resetEye: Bool, resetMovement: Bool) {
-        undoState = UndoState(eye: session.eyeElapsed, movement: session.movementElapsed,
+        undoState = UndoState(expiresAt: time + 10, eye: session.eyeElapsed, movement: session.movementElapsed,
                               resetEye: resetEye, resetMovement: resetMovement,
                               snooze: snoozeUntil, nextEye: nextEyeReminder, nextStrong: nextStrongReminder, soft: softShown, waitForStrong: waitForStrong)
     }

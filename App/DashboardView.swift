@@ -75,8 +75,8 @@ struct DashboardView: View {
                     DisclosureGroup(text("reminder.actions")) {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack {
-                                Button(text("snooze.3")) { model.act { $0.snooze(seconds: 180) } }
-                                Button(text("snooze.5")) { model.act { $0.snooze(seconds: 300) } }
+                                if settings.showSnooze3 { Button(text("snooze.3")) { model.act { $0.snooze(seconds: 180) } } }
+                                if settings.showSnooze5 { Button(text("snooze.5")) { model.act { $0.snooze(seconds: 300) } } }
                             }.buttonStyle(FlowButtonStyle())
                             HStack {
                                 Button(text("eye.skip")) { model.act { $0.skip(.eye) } }
@@ -96,7 +96,7 @@ struct DashboardView: View {
                     Button(text("quit")) { NSApplication.shared.terminate(nil) }.buttonStyle(.plain).foregroundStyle(.secondary)
                 }.font(.caption)
             }.padding(18)
-        }.frame(width: 390, height: 650).background(FlowStyle.canvas)
+        }.frame(width: 390, height: 650).background(FlowStyle.canvas).preferredColorScheme(settings.colorScheme)
     }
 
     private func notice(_ message: String, symbol: String, color: Color) -> some View {

@@ -3,98 +3,105 @@
     "id": "FB-001",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0004-reminder-app",
+    "iteration": "0006-approved-design",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "docs/iterations/0004-reminder-app/verification.md"
+      "docs/iterations/0004-reminder-app/verification.md",
+      "docs/iterations/0006-approved-design/verification.md"
     ]
   },
   {
     "id": "FB-002",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0004-reminder-app",
+    "iteration": "0006-approved-design",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "docs/iterations/0004-reminder-app/verification.md"
+      "docs/iterations/0004-reminder-app/verification.md",
+      "docs/iterations/0006-approved-design/verification.md"
     ]
   },
   {
     "id": "FB-003",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0004-reminder-app",
+    "iteration": "0006-approved-design",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "docs/iterations/0004-reminder-app/verification.md"
+      "docs/iterations/0004-reminder-app/verification.md",
+      "docs/iterations/0006-approved-design/verification.md"
     ]
   },
   {
     "id": "FB-004",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0004-reminder-app",
+    "iteration": "0006-approved-design",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "docs/iterations/0004-reminder-app/verification.md"
+      "docs/iterations/0004-reminder-app/verification.md",
+      "docs/iterations/0006-approved-design/verification.md"
     ]
   },
   {
     "id": "FB-005",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0004-reminder-app",
+    "iteration": "0006-approved-design",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "docs/iterations/0004-reminder-app/verification.md"
+      "docs/iterations/0004-reminder-app/verification.md",
+      "docs/iterations/0006-approved-design/verification.md"
     ]
   },
   {
     "id": "FB-006",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0004-reminder-app",
+    "iteration": "0006-approved-design",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "docs/iterations/0004-reminder-app/verification.md"
+      "docs/iterations/0004-reminder-app/verification.md",
+      "docs/iterations/0006-approved-design/verification.md"
     ]
   },
   {
     "id": "FB-007",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0004-reminder-app",
+    "iteration": "0006-approved-design",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "docs/iterations/0004-reminder-app/verification.md"
+      "docs/iterations/0004-reminder-app/verification.md",
+      "docs/iterations/0006-approved-design/verification.md"
     ],
     "note": "Manual sharing quiet mode implemented; automatic Feishu detection remains deferred."
   },
@@ -102,56 +109,60 @@
     "id": "FB-008",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0004-reminder-app",
+    "iteration": "0006-approved-design",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "docs/iterations/0004-reminder-app/verification.md"
+      "docs/iterations/0004-reminder-app/verification.md",
+      "docs/iterations/0006-approved-design/verification.md"
     ]
   },
   {
     "id": "FB-009",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0004-reminder-app",
+    "iteration": "0006-approved-design",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "docs/iterations/0004-reminder-app/verification.md"
+      "docs/iterations/0004-reminder-app/verification.md",
+      "docs/iterations/0006-approved-design/verification.md"
     ]
   },
   {
     "id": "FB-010",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0004-reminder-app",
+    "iteration": "0006-approved-design",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "docs/iterations/0004-reminder-app/verification.md"
+      "docs/iterations/0004-reminder-app/verification.md",
+      "docs/iterations/0006-approved-design/verification.md"
     ]
   },
   {
     "id": "FB-011",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0004-reminder-app",
+    "iteration": "0006-approved-design",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
-      "docs/iterations/0004-reminder-app/verification.md"
+      "docs/iterations/0004-reminder-app/verification.md",
+      "docs/iterations/0006-approved-design/verification.md"
     ]
   },
   {

@@ -26,7 +26,7 @@ final class ReminderPresenter {
         guard let model else { return false }
         let result = present(AnyView(ReminderView(model: model, reminder: reminder)), height: 450)
         resting = false
-        hideAt = model.engine.time + (reminder.strong ? 12 : 7)
+        hideAt = model.engine.time + (reminder.strong ? model.settings.strongDuration : model.settings.weakDuration)
         lastTick = model.engine.time
         return result
     }
@@ -35,6 +35,10 @@ final class ReminderPresenter {
         guard let model else { return }
         _ = present(AnyView(RestContent(model: model).padding(12).background(FlowStyle.canvas, in: RoundedRectangle(cornerRadius: 16))), height: 310)
         resting = true
+        if model.settings.fullscreenRest, model.engine.session.activeBreak == .movement,
+           let screen = destinationScreen(model.settings.reminderScreen) {
+            panel?.setFrame(screen.frame, display: true)
+        }
     }
 
     private func present(_ content: AnyView, height: Double) -> Bool {
@@ -50,9 +54,11 @@ final class ReminderPresenter {
         window.isOpaque = false
         window.backgroundColor = .clear
         window.hasShadow = true
-        window.contentView = NSHostingView(rootView: content)
+        window.contentView = NSHostingView(rootView: content.preferredColorScheme(model.settings.colorScheme))
         let frame = screen.visibleFrame
-        window.setFrameOrigin(NSPoint(x: frame.maxX - 390, y: frame.maxY - height - 20))
+        let corner = model.settings.reminderCorner
+        window.setFrameOrigin(NSPoint(x: corner.hasSuffix("Left") ? frame.minX + 20 : frame.maxX - 390,
+                                      y: corner.hasPrefix("bottom") ? frame.minY + 20 : frame.maxY - height - 20))
         panel = window
         window.orderFrontRegardless()
         outsideMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
@@ -125,8 +131,8 @@ private struct ReminderView: View {
                     Button(text("eye.start")) { model.act { $0.beginBreak(.eye) } }.buttonStyle(FlowButtonStyle(prominent: !reminder.movement))
                 }
                 HStack {
-                    Button(text("snooze.3")) { model.act { $0.snooze(seconds: 180) } }
-                    Button(text("snooze.5")) { model.act { $0.snooze(seconds: 300) } }
+                    if model.settings.showSnooze3 { Button(text("snooze.3")) { model.act { $0.snooze(seconds: 180) } } }
+                    if model.settings.showSnooze5 { Button(text("snooze.5")) { model.act { $0.snooze(seconds: 300) } } }
                 }.buttonStyle(FlowButtonStyle())
                 if reminder.movement && !reminder.strong {
                     Button(text("movement.wait")) { model.act { $0.waitUntilStrong() } }.buttonStyle(.borderless)
@@ -136,7 +142,7 @@ private struct ReminderView: View {
                         if reminder.eye { Button(text("eye.skip")) { model.act { $0.skip(.eye) } } }
                         if reminder.movement { Button(text("movement.skip")) { model.act { $0.skip(.movement) } } }
                         if reminder.eye && reminder.movement {
-                            Button(text("reminder.skip.both")) { model.act { $0.skip(.eye); $0.skip(.movement) } }
+                            Button(text("reminder.skip.both")) { model.act { $0.skipBoth() } }
                         }
                         Text(text("reminder.skip.help")).font(.caption).foregroundStyle(.secondary)
                     }.padding(.top, 8).buttonStyle(.borderless)

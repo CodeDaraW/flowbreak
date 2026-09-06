@@ -171,10 +171,10 @@ private func work(_ engine: inout BreakEngine, _ seconds: Int) {
     var engine = BreakEngine()
     work(&engine, 1000)
     engine.markRest(.movement)
-    work(&engine, 50)
+    work(&engine, 5)
     engine.undo()
-    #expect(engine.session.eyeElapsed == 1050)
-    #expect(engine.session.movementElapsed == 1050)
+    #expect(engine.session.eyeElapsed == 1005)
+    #expect(engine.session.movementElapsed == 1005)
     #expect(!engine.canUndo)
 }
 
@@ -303,4 +303,62 @@ private func work(_ engine: inout BreakEngine, _ seconds: Int) {
     engine.snooze(seconds: 3)
     engine.tick(now: 1817, idle: 5)
     #expect(engine.reminder?.eye == true)
+}
+
+@Test func extendedMovementRestDoesNotCompleteAtOldDeadline() {
+    var engine = BreakEngine()
+    work(&engine, 600)
+    engine.beginBreak(.movement)
+    engine.extendBreak(seconds: 60)
+    engine.tick(now: 780, idle: 180)
+    #expect(engine.session.activeBreak == .movement)
+    #expect(engine.breakRemaining == 60)
+    engine.tick(now: 840, idle: 240)
+    #expect(engine.session.activeBreak == nil)
+    #expect(engine.session.eyeElapsed == 0)
+}
+
+@Test func configurableStrongReminderIntervalIsRespected() throws {
+    var engine = BreakEngine()
+    engine.strongRepeatInterval = 120
+    work(&engine, 3600)
+    engine.tick(now: 3602, idle: 2)
+    engine.markPresented(try #require(engine.reminder))
+    work(&engine, 116)
+    engine.tick(now: 3720, idle: 2)
+    #expect(engine.reminder == nil)
+    engine.tick(now: 3722, idle: 4)
+    #expect(engine.reminder?.strong == true)
+}
+
+@Test func pointerMotionDoesNotInterruptButDeliberateInputDoes() {
+    var engine = BreakEngine()
+    work(&engine, 600)
+    engine.beginBreak(.eye)
+    engine.tick(now: 605, idle: 0, restInputIdle: 5)
+    #expect(engine.session.activeBreak == .eye)
+    engine.tick(now: 610, idle: 0, restInputIdle: 0)
+    #expect(engine.session.activeBreak == nil)
+    #expect(engine.session.eyeElapsed == 600)
+    #expect(engine.session.movementElapsed == 610)
+}
+
+@Test func manualCorrectionUndoExpiresAtTenSeconds() {
+    var engine = BreakEngine()
+    work(&engine, 100)
+    engine.markRest(.movement)
+    work(&engine, 10)
+    #expect(!engine.canUndo)
+    engine.undo()
+    #expect(engine.session.eyeElapsed == 10)
+}
+
+@Test func combinedSkipHasOneUndoSnapshot() {
+    var engine = BreakEngine()
+    work(&engine, 100)
+    engine.skipBoth()
+    work(&engine, 5)
+    engine.undo()
+    #expect(engine.session.eyeElapsed == 105)
+    #expect(engine.session.movementElapsed == 105)
 }

@@ -3,6 +3,8 @@ import SwiftUI
 struct PowerControls: View {
     @ObservedObject var model: AppModel
     @State private var minutes = 30.0
+    @State private var editingEnd = false
+    @State private var endDate = Date().addingTimeInterval(1800)
     private func text(_ key: String) -> String { model.settings.text(key) }
     private var active: Bool { model.engine.session.keepAwakeRequested }
     private var paused: Bool { model.engine.session.timingPaused }
@@ -33,6 +35,17 @@ struct PowerControls: View {
                         Button("+30 " + text("minutes")) { model.extendWake(seconds: 1800) }
                     }.buttonStyle(FlowButtonStyle())
                 }
+                Button(text("power.editEnd")) {
+                    endDate = Date().addingTimeInterval(model.engine.wakeRemaining ?? 1800)
+                    editingEnd.toggle()
+                }.buttonStyle(.borderless)
+                if editingEnd {
+                    DatePicker(text("power.endsAt"), selection: $endDate, in: Date()..., displayedComponents: [.date, .hourAndMinute])
+                    Button(text("power.apply")) {
+                        model.startWake(seconds: endDate.timeIntervalSinceNow, agent: false)
+                        editingEnd = false
+                    }.buttonStyle(FlowButtonStyle()).disabled(endDate <= Date())
+                }
                 Button(text(paused ? "timing.resume" : "agent.handBack")) {
                     model.act { if $0.session.timingPaused { $0.resumeTiming() } else { $0.pauseTiming() } }
                 }.buttonStyle(FlowButtonStyle(prominent: true))
@@ -56,6 +69,11 @@ struct PowerControls: View {
                     }
                 }
                 if paused { Button(text("timing.resume")) { model.act { $0.resumeTiming() } }.buttonStyle(FlowButtonStyle()) }
+            }
+            if active {
+                Toggle(text("wake.system"), isOn: Binding(get: { active }, set: { value in
+                    if !value { model.settings.keepDisplayOn = false; model.act { $0.stopKeepAwake() } }
+                })).toggleStyle(.switch).controlSize(.small)
             }
             Toggle(text("wake.display"), isOn: Binding(get: { model.settings.keepDisplayOn }, set: { model.settings.keepDisplayOn = $0 }))
                 .toggleStyle(.switch).controlSize(.small)

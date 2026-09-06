@@ -15,3 +15,7 @@ Requirements: FB-001 through FB-011. Preserve native macOS 14+ arm64, bilingual 
 ## Acceptance
 
 Run make check. Use Computer Use against the built application, covering light/dark dashboard, settings navigation and persistence, active eye/movement rest, Agent start/takeover/stop, reminder actions and unclipped expanded controls. Record observed results separately from build/core tests; OS sleep/Space/multiple physical display checks remain pending if not observed.
+
+## Functional completion audit
+
+Remaining design controls are in scope: configurable screen corner, separate reminder/completion sounds, snooze button visibility, weak/strong panel duration, strong repetition interval, optional fullscreen movement rest, active-rest extension, custom power duration/end-time editing, independent system/display power controls. Verify each against real state; no finished claim based only on compilation.

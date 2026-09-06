@@ -23,7 +23,7 @@
 
 ## 默认参数
 
-所有值允许后续调整；本轮设置界面单位为秒。
+所有值允许后续调整；设置按场景显示分钟或秒，并持久保存。
 
 | 参数 | 默认 |
 |---|---:|
@@ -41,8 +41,12 @@
 
 ## 当前实现约定与剩余验收
 
-输入缓冲 2 秒、事件保留 1000 条、撤销最近一次手动补记/跳过、非激活浮层和手动共享静默已采用 ADR-0003 的规则。非阻断浮层在各 Space 下的键盘/点击行为、锁屏与多屏仍需真机验收。飞书检测决策见 [ADR-0002](../decisions/0002-defer-sharing-detection.md)。自动共享识别不在当前开发版内，不能宣称已支持。
+输入缓冲 2 秒、事件保留 1000 条、10 秒内撤销最近一次手动补记/跳过、非激活浮层和手动共享静默已采用 ADR-0003 的规则。非阻断浮层在各 Space 下的键盘/点击行为、锁屏与多屏仍需真机验收。飞书检测决策见 [ADR-0002](../decisions/0002-defer-sharing-detection.md)。自动共享识别不在当前开发版内，不能宣称已支持。
 
 ## Approved design baseline (2026-09-07)
 
 r02 passed the user-authorized external design review. Native implementation follows [ADR-0004](../decisions/0004-approved-design.md) and [iteration 0006](../iterations/0006-approved-design/plan.md). Waiting for the strong movement threshold does not silence eye reminders. Explicit skip restarts its own cycle, including soft movement. Unknown app downtime preserves saved work; only observed absence proves natural rest. Weak eye reminders do not automatically repeat periodically after dismissal. Hover and expanded actions pause panel auto-dismissal.
+
+### r02 设置与休息细节
+
+弱/强提醒停留默认 8/15 秒，强提醒重复默认 10 分钟；3/5 分钟延迟按钮可分别隐藏。提醒声音默认关闭，休息完成声音默认开启，共享静默不播放自动声音。提醒支持显示器及四角位置，起身休息可选不切 Space 的全屏浮层。起身休息可增加 1 分钟；保持唤醒可延长或修改结束时间。点击、键盘、滚动及拖动中断休息，单纯移动指针不打断；休息面板自身的延长操作不作为中断。补记或跳过的撤销窗口为 10 秒，合并跳过作为一次修正。外观支持跟随系统、浅色、深色，仅作用于本应用。

@@ -107,12 +107,13 @@ final class AppModel: ObservableObject {
         persist()
     }
 
-    func pulse(present: Bool = true) {
+    func pulse(present: Bool = true, ownAction: Bool = false) {
         engine.updatePolicy(settings.policy)
+        engine.strongRepeatInterval = settings.strongRepeat
         let idle = SystemActivity.idleSeconds()
         if idle == nil { errorKey = "error.idle" }
         // Unknown idle does not count as natural rest; no private input data is read.
-        engine.tick(now: now, idle: idle ?? 0)
+        engine.tick(now: now, idle: idle ?? 0, restInputIdle: ownAction ? now + 1 : SystemActivity.restInputIdleSeconds())
         if !engine.session.keepAwakeRequested && power.isActive { power.stop() }
         if engine.session.keepAwakeRequested && appliedDisplayOn != settings.keepDisplayOn {
             do {
@@ -125,13 +126,16 @@ final class AppModel: ObservableObject {
         if engine.session.activeBreak == nil || engine.sharing || !engine.available { restPanel?.hide() }
         panel?.expire(at: engine.time)
         if present, idle != nil, let reminder = engine.reminder, panel?.isVisible != true {
-            if panel?.show(reminder) == true { engine.markPresented(reminder); collectEvents() }
+            if panel?.show(reminder) == true {
+                engine.markPresented(reminder); collectEvents()
+                if settings.reminderSound { NSSound(named: "Pop")?.play() }
+            }
         }
         if engine.time - checkpoint >= 15 { persist() }
     }
 
     func act(_ action: (inout BreakEngine) -> Void) {
-        pulse(present: false)
+        pulse(present: false, ownAction: true)
         panel?.hide()
         action(&engine)
         restPanel?.hide()
@@ -173,6 +177,7 @@ final class AppModel: ObservableObject {
 
     private func collectEvents() {
         let events = engine.drainEvents()
+        if events.contains("breakCompleted"), settings.completionSound, !engine.sharing, engine.available { NSSound(named: "Glass")?.play() }
         if let last = events.last { lastEvent = last }
         history.append(contentsOf: events.map { ActivityEvent(date: Date(), kind: $0) })
         if history.count > 1000 { history.removeFirst(history.count - 1000) }
