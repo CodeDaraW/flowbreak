@@ -16,7 +16,7 @@
   },
   {
     "id": "FB-002",
-    "status": "partial",
+    "status": "implemented",
     "spec": "docs/specs/product.md",
     "iteration": "0006-approved-design",
     "implementation": [
@@ -26,12 +26,13 @@
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
-      "docs/iterations/0006-approved-design/verification.md"
+      "docs/iterations/0006-approved-design/verification.md",
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
     ]
   },
   {
     "id": "FB-003",
-    "status": "partial",
+    "status": "implemented",
     "spec": "docs/specs/product.md",
     "iteration": "0006-approved-design",
     "implementation": [
@@ -41,12 +42,13 @@
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
-      "docs/iterations/0006-approved-design/verification.md"
+      "docs/iterations/0006-approved-design/verification.md",
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
     ]
   },
   {
     "id": "FB-004",
-    "status": "partial",
+    "status": "implemented",
     "spec": "docs/specs/product.md",
     "iteration": "0006-approved-design",
     "implementation": [
@@ -56,12 +58,13 @@
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
-      "docs/iterations/0006-approved-design/verification.md"
+      "docs/iterations/0006-approved-design/verification.md",
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
     ]
   },
   {
     "id": "FB-005",
-    "status": "partial",
+    "status": "implemented",
     "spec": "docs/specs/product.md",
     "iteration": "0006-approved-design",
     "implementation": [
@@ -71,12 +74,13 @@
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
-      "docs/iterations/0006-approved-design/verification.md"
+      "docs/iterations/0006-approved-design/verification.md",
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
     ]
   },
   {
     "id": "FB-006",
-    "status": "partial",
+    "status": "implemented",
     "spec": "docs/specs/product.md",
     "iteration": "0006-approved-design",
     "implementation": [
@@ -86,7 +90,8 @@
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
-      "docs/iterations/0006-approved-design/verification.md"
+      "docs/iterations/0006-approved-design/verification.md",
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
     ]
   },
   {
@@ -107,7 +112,7 @@
   },
   {
     "id": "FB-008",
-    "status": "partial",
+    "status": "implemented",
     "spec": "docs/specs/product.md",
     "iteration": "0006-approved-design",
     "implementation": [
@@ -117,7 +122,8 @@
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
-      "docs/iterations/0006-approved-design/verification.md"
+      "docs/iterations/0006-approved-design/verification.md",
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
     ]
   },
   {
@@ -133,7 +139,8 @@
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
       "docs/iterations/0006-approved-design/verification.md"
-    ]
+    ],
+    "note": "Native panels verified on current macOS 26.6.2. Physical multi-display/unplug and cross-Space input continuity remain unverified."
   },
   {
     "id": "FB-010",
@@ -152,17 +159,22 @@
   },
   {
     "id": "FB-011",
-    "status": "partial",
+    "status": "implemented",
     "spec": "docs/specs/product.md",
     "iteration": "0006-approved-design",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
-      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift",
+      "App/SettingsStore.swift",
+      "App/SettingsView.swift",
+      "App/Resources/en.lproj/Localizable.strings",
+      "App/Resources/zh-Hans.lproj/Localizable.strings"
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
-      "docs/iterations/0006-approved-design/verification.md"
+      "docs/iterations/0006-approved-design/verification.md",
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
     ]
   },
   {

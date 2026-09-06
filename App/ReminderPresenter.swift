@@ -50,7 +50,7 @@ final class ReminderPresenter {
     }
 
     private func present(_ content: AnyView, height: Double) -> Bool {
-        guard let model, let screen = destinationScreen(model.settings.reminderScreen) else { return false }
+        guard let model, destinationScreen(model.settings.reminderScreen) != nil else { return false }
         hide()
         let window = ReminderPanel(contentRect: NSRect(x: 0, y: 0, width: 370, height: height),
                                    styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
@@ -66,11 +66,8 @@ final class ReminderPresenter {
         // Window dimensions belong to this presenter, including the optional full-screen frame.
         hosting.sizingOptions = []
         window.contentView = hosting
-        let frame = screen.visibleFrame
-        let corner = model.settings.reminderCorner
-        window.setFrameOrigin(NSPoint(x: corner.hasSuffix("Left") ? frame.minX + 20 : frame.maxX - 390,
-                                      y: corner.hasPrefix("bottom") ? frame.minY + 20 : frame.maxY - height - 20))
         panel = window
+        reposition()
         window.orderFrontRegardless()
         outsideMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
             Task { @MainActor in if self?.resting != true { self?.hide() } }
@@ -87,6 +84,24 @@ final class ReminderPresenter {
         if !model.settings.reminderCorner.hasPrefix("bottom") { frame.origin.y += frame.height - height }
         frame.size.height = height
         panel.setFrame(frame, display: true)
+        reposition()
+    }
+
+    /// Keep visible work on screen when a display disappears or changes geometry.
+    func reposition() {
+        guard let panel, let model else { return }
+        guard let screen = destinationScreen(model.settings.reminderScreen) else { hide(); return }
+        if resting && model.settings.fullscreenRest && model.engine.session.activeBreak == .movement {
+            panel.setFrame(screen.frame, display: true)
+            return
+        }
+        let bounds = screen.visibleFrame.insetBy(dx: 20, dy: 20)
+        let width = min(370, bounds.width)
+        let height = min(panel.frame.height, bounds.height)
+        let corner = model.settings.reminderCorner
+        panel.setFrame(NSRect(x: corner.hasSuffix("Left") ? bounds.minX : bounds.maxX - width,
+                              y: corner.hasPrefix("bottom") ? bounds.minY : bounds.maxY - height,
+                              width: width, height: height), display: true)
     }
 
     private func reminderHeight(_ reminder: Reminder, expanded: Bool) -> Double {

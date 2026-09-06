@@ -87,7 +87,8 @@ final class AppModel: ObservableObject {
         observe(DistributedNotificationCenter.default(), Notification.Name("com.apple.screenIsUnlocked")) { $0.setUnavailable("lock", false) }
         observe(.default, NSApplication.didChangeScreenParametersNotification) { model in
             model.screens = NSScreen.screens
-            model.panel?.hide()
+            model.panel?.reposition()
+            model.restPanel?.reposition()
         }
         timer = Timer(timeInterval: 1, repeats: true) { [weak self] _ in
             Task { @MainActor in self?.pulse() }

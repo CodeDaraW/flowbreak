@@ -23,7 +23,7 @@ make run
 open FlowBreak.xcodeproj
 ```
 
-The app is built at `.build/DerivedData/Build/Products/Debug/FlowBreak.app`. `make run` applies an ad-hoc local signature and opens it. Find the leaf icon in the menu bar; there is no Dock icon. Select Chinese, English or the system language in Settings. Durations are seconds; valid changes save automatically. `project.yml` is the source of truth; generated projects are ignored.
+The app is built at `.build/DerivedData/Build/Products/Debug/FlowBreak.app`. `make run` applies an ad-hoc local signature and opens it. Find the leaf icon in the menu bar; there is no Dock icon. Select Chinese, English or the system language in Settings. Durations use minutes or seconds as labeled; valid changes save automatically. `project.yml` is the source of truth; generated projects are ignored.
 
 If SwiftPM reports `sandbox_apply: Operation not permitted`, run from a normal local terminal or request execution permission; do not disable the package sandbox. Check `xcode-select -p` if Xcode is unavailable. Distribution signing and notarization are not configured.
 
@@ -35,6 +35,6 @@ Snapshots and up to 1,000 events stay in `~/Library/Application Support/FlowBrea
 
 ## Contribute
 
-Start with [AGENTS.md](AGENTS.md), the [documentation workflow](docs/README.md) and the [current iteration](docs/iterations/0004-reminder-app/plan.md). Behavioral changes require linked specifications, decision records and validation evidence. Engineering documentation currently uses Chinese; both product languages are maintained together.
+Start with [AGENTS.md](AGENTS.md), the [documentation workflow](docs/README.md) and the [current iteration](docs/iterations/0006-approved-design/plan.md). Behavioral changes require linked specifications, decision records and validation evidence. Engineering documentation currently uses Chinese; both product languages are maintained together.
 
 The repository is local, with no remote configured. See [CONTRIBUTING.md](CONTRIBUTING.md) and [MIT license](LICENSE). Never commit personal accounts, certificates, runtime logs or raw chat exports.

@@ -23,7 +23,7 @@ make run      # 构建、临时本地签名并打开菜单栏应用
 open FlowBreak.xcodeproj
 ```
 
-构建输出在 `.build/DerivedData/Build/Products/Debug/FlowBreak.app`。应用不显示 Dock 图标，从菜单栏叶子图标打开。设置支持简体中文 / English / 跟随系统，参数单位为秒，有效值自动保存。生成工程不提交，`project.yml` 是工程配置唯一来源。
+构建输出在 `.build/DerivedData/Build/Products/Debug/FlowBreak.app`。应用不显示 Dock 图标，从菜单栏叶子图标打开。设置支持简体中文 / English / 跟随系统，参数按场景使用分钟或秒，有效值自动保存。生成工程不提交，`project.yml` 是工程配置唯一来源。
 
 SwiftPM 报 `sandbox_apply: Operation not permitted` 表示运行环境限制，应在正常本机终端运行或请求执行权限；不要通过禁用沙箱改写项目。Xcode 未选中时检查 `xcode-select -p`。XcodeGen 缺失按上述方式安装；签名发布与公证尚未配置。
 
@@ -39,7 +39,7 @@ SwiftPM 报 `sandbox_apply: Operation not permitted` 表示运行环境限制，
 
 ## AI 与贡献者入口
 
-先读 [AGENTS.md](AGENTS.md)，再读 [文档工作流](docs/README.md) 和 [当前迭代](docs/iterations/0004-reminder-app/plan.md)。所有行为变更必须先关联规格，再记录实现与验证；重要决策进入 ADR。
+先读 [AGENTS.md](AGENTS.md)，再读 [文档工作流](docs/README.md) 和 [当前迭代](docs/iterations/0006-approved-design/plan.md)。所有行为变更必须先关联规格，再记录实现与验证；重要决策进入 ADR。
 
 - `App/`：SwiftUI 菜单栏与设置、macOS 集成入口。
 - `Packages/FlowBreakCore/`：确定性规则，不含 UI、IOKit 和真实时钟。
