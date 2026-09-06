@@ -4,159 +4,142 @@ import FlowBreakCore
 struct DashboardView: View {
     @ObservedObject var model: AppModel
     @ObservedObject private var settings: SettingsStore
+    @State private var powerPage = false
     init(model: AppModel) { self.model = model; self.settings = model.settings }
     private func text(_ key: String) -> String { settings.text(key) }
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                HStack {
-                    Label("FlowBreak", systemImage: "leaf.fill").font(.title2.bold())
+            VStack(alignment: .leading, spacing: 14) {
+                HStack(spacing: 8) {
+                    Image(systemName: "leaf.fill").foregroundStyle(.green).font(.title3)
+                    Text("FlowBreak").font(.system(size: 17, weight: .bold))
                     Spacer()
-                    Text(text(model.statusKey)).font(.caption).foregroundStyle(.secondary)
+                    Text(text(model.statusKey)).font(.system(size: 10, weight: .medium))
+                        .padding(.horizontal, 8).padding(.vertical, 5)
+                        .background(.green.opacity(0.10), in: Capsule())
                 }
-                if let error = model.errorKey { Text(text(error)).font(.caption).foregroundStyle(.red) }
-                if model.lastEvent == "breakInterrupted" {
-                    Text(text("break.interrupted")).font(.caption).foregroundStyle(.orange)
-                }
-                timerCard("eye.title", symbol: "eye", elapsed: model.engine.session.eyeElapsed,
-                          target: model.engine.policy.eyeInterval)
-                timerCard("movement.title", symbol: "figure.walk", elapsed: model.engine.session.movementElapsed,
-                          target: model.engine.policy.movementStrongInterval)
-                if !model.engine.isWaitingForStrong && model.engine.snoozeUntil > model.engine.time {
-                    Text(text("snooze.remaining") + " " + timeString(model.engine.snoozeUntil - model.engine.time))
-                        .font(.caption).foregroundStyle(.secondary)
-                }
-                if let kind = model.engine.session.activeBreak {
-                    HStack {
-                        Text(text(kind == .eye ? "eye.title" : "movement.title"))
-                        Spacer()
-                        Text(timeString(model.engine.breakRemaining)).monospacedDigit().font(.title2)
-                        Button(text("cancel")) { model.act { $0.cancelBreak() } }
-                    }
+                if let error = model.errorKey { notice(text(error), symbol: "exclamationmark.triangle", color: .red) }
+                if model.lastEvent == "breakInterrupted" { notice(text("break.interrupted"), symbol: "cursorarrow", color: .orange) }
+                if powerPage {
+                    Button { powerPage = false } label: { Label(text("nav.back"), systemImage: "chevron.left") }.buttonStyle(.plain)
+                    PowerControls(model: model)
                 } else {
-                    HStack {
-                        Button(text("eye.start")) { model.act { $0.beginBreak(.eye) } }
-                        Button(text("movement.start")) { model.act { $0.beginBreak(.movement) } }
-                    }.disabled(model.engine.session.timingPaused)
-                }
-                HStack {
-                    Menu(text("rest.mark")) {
+                    HStack(alignment: .top, spacing: 10) {
+                        timerCard(eye: true)
+                        timerCard(eye: false)
+                    }
+                    if model.engine.session.activeBreak != nil {
+                        RestContent(model: model)
+                    } else {
+                        SectionCaption(title: text("dashboard.start"))
+                        HStack(spacing: 10) {
+                            Button { model.act { $0.beginBreak(.eye) } } label: {
+                                Label(text("eye.start"), systemImage: "eye")
+                            }.buttonStyle(FlowButtonStyle(prominent: true))
+                            Button { model.act { $0.beginBreak(.movement) } } label: {
+                                Label(text("movement.start"), systemImage: "figure.walk")
+                            }.buttonStyle(FlowButtonStyle(prominent: true, tint: .green))
+                        }.disabled(model.engine.session.timingPaused)
+                    }
+                    if model.engine.snoozeUntil > model.engine.time {
+                        notice(text("snooze.remaining") + "  " + timeString(model.engine.snoozeUntil - model.engine.time), symbol: "clock", color: .accentColor)
+                    } else if model.engine.isWaitingForStrong {
+                        notice(text("movement.wait.help"), symbol: "clock", color: .orange)
+                    }
+                    SectionCaption(title: text("dashboard.mode"))
+                    HStack(spacing: 10) {
+                        modeButton("agent.start", detail: "agent.summary", symbol: "sparkles", active: model.engine.session.timingPaused)
+                        modeButton("wake.title", detail: "wake.summary", symbol: "cup.and.saucer", active: model.engine.session.keepAwakeRequested)
+                    }
+                    if model.engine.session.keepAwakeRequested || model.engine.session.timingPaused {
+                        HStack {
+                            Image(systemName: "timer").foregroundStyle(.blue)
+                            Text(model.engine.wakeRemaining.map(timeString) ?? text("wake.unlimited")).monospacedDigit()
+                            Spacer()
+                            Button(text(model.engine.session.timingPaused ? "timing.resume" : "wake.stop")) {
+                                model.act { if $0.session.timingPaused { $0.resumeTiming() } else { $0.stopKeepAwake() } }
+                            }.buttonStyle(.borderless)
+                        }.font(.caption).padding(10).background(.blue.opacity(0.06), in: RoundedRectangle(cornerRadius: 9))
+                    }
+                    SectionCaption(title: text("rest.mark"))
+                    HStack(spacing: 10) {
                         Button(text("eye.done")) { model.act { $0.markRest(.eye) } }
                         Button(text("movement.done")) { model.act { $0.markRest(.movement) } }
+                    }.buttonStyle(FlowButtonStyle())
+                    HStack(alignment: .top) {
+                        Text(text("rest.mark.help")).font(.system(size: 10)).foregroundStyle(.secondary)
+                        Spacer()
+                        if model.engine.canUndo { Button(text("undo")) { model.act { $0.undo() } }.font(.caption).buttonStyle(.borderless) }
                     }
-                    Button(text("undo")) { model.act { $0.undo() } }.disabled(!model.engine.canUndo)
-                    Menu(text("reminder.actions")) {
-                        Button(text("snooze.3")) { model.act { $0.snooze(seconds: 180) } }
-                        Button(text("snooze.5")) { model.act { $0.snooze(seconds: 300) } }
-                        if model.engine.session.eyeElapsed >= model.engine.policy.eyeInterval {
-                            Button(text("eye.skip")) { model.act { $0.skip(.eye) } }
-                        }
-                        if model.engine.session.movementElapsed >= model.engine.policy.movementStrongInterval {
-                            Button(text("movement.skip")) { model.act { $0.skip(.movement) } }
-                        } else if model.engine.session.movementElapsed >= model.engine.policy.movementSoftInterval {
-                            Button(text("movement.wait")) { model.act { $0.waitUntilStrong() } }
-                        }
-                    }
-                }
-                Divider()
-                wakeSection
-                Toggle(text("sharing.manual"), isOn: Binding(
-                    get: { model.engine.sharing }, set: { value in model.act { $0.setSharing(value) } }))
-                Text(text("sharing.help")).font(.caption).foregroundStyle(.secondary)
-                DisclosureGroup(text("history.title")) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        if model.history.isEmpty { Text(text("history.empty")) }
-                        ForEach(Array(model.history.suffix(8).reversed())) { event in
+                    DisclosureGroup(text("reminder.actions")) {
+                        VStack(alignment: .leading, spacing: 10) {
                             HStack {
-                                Text(event.date, style: .time).monospacedDigit()
-                                Text(text("event." + event.kind))
-                            }.font(.caption)
-                        }
-                        Button(text("history.open")) { model.openDataDirectory() }
-                    }.frame(maxWidth: .infinity, alignment: .leading)
+                                Button(text("snooze.3")) { model.act { $0.snooze(seconds: 180) } }
+                                Button(text("snooze.5")) { model.act { $0.snooze(seconds: 300) } }
+                            }.buttonStyle(FlowButtonStyle())
+                            HStack {
+                                Button(text("eye.skip")) { model.act { $0.skip(.eye) } }
+                                Button(text("movement.skip")) { model.act { $0.skip(.movement) } }
+                            }.buttonStyle(.borderless)
+                            Toggle(text("sharing.manual"), isOn: Binding(get: { model.engine.sharing }, set: { value in model.act { $0.setSharing(value) } }))
+                                .toggleStyle(.switch).controlSize(.small)
+                            Text(text("sharing.help")).font(.caption).foregroundStyle(.secondary)
+                        }.padding(.top, 8)
+                    }.font(.caption)
                 }
+                if model.engine.sharing { notice(text("sharing.active"), symbol: "rectangle.on.rectangle.slash", color: .blue) }
                 Divider()
                 HStack {
-                    SettingsLink { Text(text("settings.title")) }
+                    SettingsLink { Label(text("settings.title"), systemImage: "gearshape") }.buttonStyle(.plain)
                     Spacer()
-                    Button(text("quit")) { NSApplication.shared.terminate(nil) }
-                }
-            }.padding(20)
-        }.frame(width: 390, height: 650)
+                    Button(text("quit")) { NSApplication.shared.terminate(nil) }.buttonStyle(.plain).foregroundStyle(.secondary)
+                }.font(.caption)
+            }.padding(18)
+        }.frame(width: 390, height: 650).background(FlowStyle.canvas)
     }
 
-    private func timerCard(_ key: String, symbol: String, elapsed: Double, target: Double) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Label(text(key), systemImage: symbol)
-                Spacer()
-                Text(timeString(elapsed)).monospacedDigit().font(.title3.weight(.medium))
-            }
-            ProgressView(value: min(1, elapsed / target)).tint(elapsed >= target ? .orange : .green)
-            if key == "movement.title" && elapsed >= model.engine.policy.movementSoftInterval {
-                Text(text(elapsed >= target ? "movement.overdue" : "movement.suggested"))
-                    .font(.caption).foregroundStyle(.orange)
-            } else {
-                Text(text("next.in") + " " + timeString(max(0, (key == "movement.title" ? model.engine.policy.movementSoftInterval : target) - elapsed)))
-                    .font(.caption).foregroundStyle(.secondary)
-            }
-        }.padding(12).background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 12))
+    private func notice(_ message: String, symbol: String, color: Color) -> some View {
+        Label(message, systemImage: symbol).font(.caption).foregroundStyle(color)
+            .padding(10).frame(maxWidth: .infinity, alignment: .leading)
+            .background(color.opacity(0.07), in: RoundedRectangle(cornerRadius: 10))
     }
 
-    private var wakeSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Label(text("wake.title"), systemImage: "cup.and.saucer")
-                Spacer()
-                if model.engine.session.keepAwakeRequested {
-                    Text(model.engine.wakeRemaining.map(timeString) ?? text("wake.unlimited"))
-                        .monospacedDigit().foregroundStyle(.secondary)
+    private func modeButton(_ key: String, detail: String, symbol: String, active: Bool) -> some View {
+        Button { powerPage = true } label: {
+            HStack(spacing: 8) {
+                Image(systemName: symbol).foregroundStyle(active ? .blue : .secondary)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(text(key)).font(.system(size: 12, weight: .semibold))
+                    Text(text(detail)).font(.system(size: 9)).foregroundStyle(.secondary).lineLimit(2)
                 }
-            }
-            if model.engine.session.keepAwakeRequested {
-                HStack {
-                    if model.engine.wakeRemaining != nil {
-                        Menu(text("wake.extend")) {
-                            ForEach([15, 30, 60], id: \.self) { minutes in
-                                Button("+\(minutes) " + text("minutes")) { model.extendWake(seconds: Double(minutes * 60)) }
-                            }
-                        }
-                    }
-                    Button(text("wake.stop")) { model.act { $0.stopKeepAwake() } }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right").font(.system(size: 8)).foregroundStyle(.tertiary)
+            }.padding(10).frame(maxWidth: .infinity, minHeight: 50, alignment: .leading)
+                .background(active ? Color.blue.opacity(0.07) : FlowStyle.card, in: RoundedRectangle(cornerRadius: 10))
+                .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(active ? .blue.opacity(0.3) : FlowStyle.border))
+        }.buttonStyle(.plain)
+    }
+
+    private func timerCard(eye: Bool) -> some View {
+        let elapsed = eye ? model.engine.session.eyeElapsed : model.engine.session.movementElapsed
+        let target = eye ? model.engine.policy.eyeInterval : model.engine.policy.movementStrongInterval
+        let soft = eye ? target : model.engine.policy.movementSoftInterval
+        let due = elapsed >= soft
+        let tint: Color = due ? .orange : (eye ? .blue : .green)
+        return FlowCard(accent: due ? .orange : .clear) {
+            VStack(alignment: .leading, spacing: 10) {
+                Label(text(eye ? "eye.title" : "movement.title"), systemImage: eye ? "eye" : "figure.walk")
+                    .font(.system(size: 12, weight: .semibold))
+                Text(timeString(elapsed)).font(.system(size: 26, weight: .semibold, design: .rounded)).monospacedDigit()
+                Text(text("timer.accumulated")).font(.system(size: 10)).foregroundStyle(.secondary)
+                ProgressView(value: min(1, elapsed / target)).tint(tint)
+                Text(due ? text(elapsed >= target ? "timer.due" : "timer.soft") : text("next.in") + " " + timeString(soft - elapsed))
+                    .font(.system(size: 10, weight: .medium)).foregroundStyle(due ? tint : .secondary)
+                if !eye && due && elapsed < target {
+                    Text(text("timer.strong.in") + " " + timeString(target - elapsed)).font(.system(size: 9)).foregroundStyle(.secondary)
                 }
-            } else {
-                HStack {
-                    wakeMenu(agent: false)
-                    wakeMenu(agent: true)
-                }
-            }
-            HStack {
-                Button(text(model.engine.session.timingPaused ? "timing.resume" : "timing.pause")) {
-                    model.act { engine in
-                        if engine.session.timingPaused { engine.resumeTiming() } else { engine.pauseTiming() }
-                    }
-                }
-                if model.engine.session.timingPaused {
-                    Button(text("agent.end")) { model.act { $0.endAgent() } }
-                } else if model.engine.session.keepAwakeRequested {
-                    Button(text("agent.handBack")) { model.act { $0.pauseTiming() } }
-                }
-            }
+            }.frame(maxWidth: .infinity, minHeight: 142, alignment: .topLeading)
         }
     }
-
-    private func wakeMenu(agent: Bool) -> some View {
-        Menu(text(agent ? "agent.start" : "wake.start")) {
-            ForEach([15, 30, 60, 120], id: \.self) { minutes in
-                Button("\(minutes) " + text("minutes")) { model.startWake(seconds: Double(minutes * 60), agent: agent) }
-            }
-            Button(text("wake.unlimited")) { model.startWake(seconds: nil, agent: agent) }
-        }
-    }
-}
-
-func timeString(_ seconds: Double) -> String {
-    let total = Int(max(0, min(seconds, Double(Int.max / 2))).rounded(.up))
-    return String(format: "%02d:%02d", total / 60, total % 60)
 }

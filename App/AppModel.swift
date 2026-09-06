@@ -22,6 +22,7 @@ final class AppModel: ObservableObject {
     private var unavailableReasons = Set<String>()
     private var checkpoint: Double = 0
     private var panel: ReminderPresenter?
+    private var restPanel: ReminderPresenter?
     private var appliedDisplayOn = true
     private var settingsSubscription: AnyCancellable?
 
@@ -66,6 +67,7 @@ final class AppModel: ObservableObject {
             storageWritable = false // Preserve damaged evidence until explicit user repair.
         }
         panel = ReminderPresenter(model: self)
+        restPanel = ReminderPresenter(model: self)
         settingsSubscription = settings.objectWillChange.sink { [weak self] in
             Task { @MainActor in self?.objectWillChange.send() }
         }
@@ -120,6 +122,7 @@ final class AppModel: ObservableObject {
         }
         collectEvents()
         if engine.automaticallySuppressed { panel?.hide() }
+        if engine.session.activeBreak == nil || engine.sharing || !engine.available { restPanel?.hide() }
         panel?.expire(at: engine.time)
         if present, idle != nil, let reminder = engine.reminder, panel?.isVisible != true {
             if panel?.show(reminder) == true { engine.markPresented(reminder); collectEvents() }
@@ -131,6 +134,8 @@ final class AppModel: ObservableObject {
         pulse(present: false)
         panel?.hide()
         action(&engine)
+        restPanel?.hide()
+        if engine.session.activeBreak != nil && !engine.sharing { restPanel?.showRest() }
         if !engine.session.keepAwakeRequested { power.stop() }
         collectEvents()
         persist()
@@ -157,6 +162,8 @@ final class AppModel: ObservableObject {
             persist()
         } catch { errorKey = "error.power" }
     }
+
+    func setReminderExpanded(_ value: Bool) { panel?.setExpanded(value) }
 
     func dismissReminder() { panel?.hide() }
 
@@ -186,6 +193,7 @@ final class AppModel: ObservableObject {
         timer?.invalidate()
         timer = nil
         power.stop()
+        restPanel?.hide()
         panel?.hide()
         persist()
         observers.forEach { $0.0.removeObserver($0.1) }
