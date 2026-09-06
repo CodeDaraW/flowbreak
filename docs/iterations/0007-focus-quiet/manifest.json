@@ -1,6 +1,6 @@
 {
   "id": "0007-focus-quiet",
-  "status": "active",
+  "status": "blocked",
   "requirements": [
     "FB-007",
     "FB-009",

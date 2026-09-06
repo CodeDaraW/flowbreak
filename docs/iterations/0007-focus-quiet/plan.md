@@ -1,6 +1,6 @@
 # Iteration 0007: 勿扰联动静默
 
-Status: active
+Status: blocked (development signing identity required)
 
 ## 用户变更
 

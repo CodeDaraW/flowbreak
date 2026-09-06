@@ -110,7 +110,7 @@
       "docs/iterations/0006-approved-design/verification.md",
       "docs/iterations/0007-focus-quiet/verification.md"
     ],
-    "note": "Manual sharing quiet mode implemented; automatic Feishu detection remains deferred."
+    "note": "Feishu-specific detection superseded by accepted one-time DND Focus Filter setup. Implementation and core rules present; native activation/deactivation blocked by missing development signing identity. Manual quiet remains available."
   },
   {
     "id": "FB-008",
