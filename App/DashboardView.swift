@@ -47,6 +47,14 @@ struct DashboardView: View {
                     } else if model.engine.isWaitingForStrong {
                         notice(text("movement.wait.help"), symbol: "clock", color: .orange)
                     }
+                    if let next = model.engine.nextReminderEstimate {
+                        HStack {
+                            Text(text("next.estimated"))
+                            Spacer()
+                            Text(Date().addingTimeInterval(next.seconds), style: .time).monospacedDigit()
+                            Text(text(next.eye && next.movement ? "reminder.merged" : (next.eye ? "eye.title" : "movement.title")))
+                        }.font(.system(size: 10)).foregroundStyle(.secondary)
+                    }
                     SectionCaption(title: text("dashboard.mode"))
                     HStack(spacing: 10) {
                         modeButton("agent.start", detail: "agent.summary", symbol: "sparkles", active: model.engine.session.timingPaused)
@@ -70,7 +78,7 @@ struct DashboardView: View {
                     HStack(alignment: .top) {
                         Text(text("rest.mark.help")).font(.system(size: 10)).foregroundStyle(.secondary)
                         Spacer()
-                        if model.engine.canUndo { Button(text("undo")) { model.act { $0.undo() } }.font(.caption).buttonStyle(.borderless) }
+                        if let event = model.engine.undoEvent { Button(text("undo." + event)) { model.act { $0.undo() } }.font(.caption).buttonStyle(.borderless) }
                     }
                     DisclosureGroup(text("reminder.actions")) {
                         VStack(alignment: .leading, spacing: 10) {

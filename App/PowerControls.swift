@@ -22,6 +22,12 @@ struct PowerControls: View {
                         Text(text("power.remaining")).font(.caption).foregroundStyle(.secondary)
                         Text(model.engine.wakeRemaining.map(timeString) ?? text("wake.unlimited"))
                             .font(.system(size: 36, weight: .semibold, design: .rounded)).monospacedDigit()
+                        if let remaining = model.engine.wakeRemaining {
+                            HStack {
+                                Text(text("power.endsAt"))
+                                Text(Date().addingTimeInterval(remaining), style: .time)
+                            }.font(.caption).foregroundStyle(.secondary)
+                        }
                         Text(text(paused ? "agent.running.help" : "wake.running.help")).font(.caption).foregroundStyle(.secondary)
                         if let started = model.engine.pauseStartedAt {
                             Text(text("power.paused.for") + " " + timeString(model.engine.time - started)).font(.caption).monospacedDigit()
@@ -66,17 +72,17 @@ struct PowerControls: View {
                             .buttonStyle(FlowButtonStyle(prominent: true))
                         Button(text("wake.start")) { model.startWake(seconds: minutes * 60, agent: false) }
                             .buttonStyle(FlowButtonStyle())
-                    }
+                    }.disabled(!model.settings.preventSystemSleep)
                 }
                 if paused { Button(text("timing.resume")) { model.act { $0.resumeTiming() } }.buttonStyle(FlowButtonStyle()) }
             }
-            if active {
-                Toggle(text("wake.system"), isOn: Binding(get: { active }, set: { value in
-                    if !value { model.settings.keepDisplayOn = false; model.act { $0.stopKeepAwake() } }
-                })).toggleStyle(.switch).controlSize(.small)
-            }
+            Toggle(text("wake.system"), isOn: Binding(get: { model.settings.preventSystemSleep }, set: { value in
+                model.settings.preventSystemSleep = value
+                if !value && active { model.act { $0.stopKeepAwake() } }
+            })).toggleStyle(.switch).controlSize(.small)
             Toggle(text("wake.display"), isOn: Binding(get: { model.settings.keepDisplayOn }, set: { model.settings.keepDisplayOn = $0 }))
                 .toggleStyle(.switch).controlSize(.small)
+            if !model.settings.preventSystemSleep { Text(text("wake.options.off")).font(.caption).foregroundStyle(.secondary) }
             Text(text("wake.help")).font(.caption).foregroundStyle(.secondary)
         }
     }
@@ -91,7 +97,7 @@ private struct CustomWakeDuration: View {
             HStack {
                 Button(model.settings.text("agent.start")) { model.startWake(seconds: minutes * 60, agent: true) }
                 Button(model.settings.text("wake.start")) { model.startWake(seconds: minutes * 60, agent: false) }
-            }.buttonStyle(FlowButtonStyle(prominent: true)).disabled(!minutes.isFinite || minutes <= 0 || minutes > 1440)
+            }.buttonStyle(FlowButtonStyle(prominent: true)).disabled(!model.settings.preventSystemSleep || !minutes.isFinite || minutes <= 0 || minutes > 1440)
         }
     }
 }

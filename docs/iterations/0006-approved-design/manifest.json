@@ -20,6 +20,7 @@
   "artifacts": [
     "plan.md",
     "tasks.md",
-    "verification.md"
+    "verification.md",
+    "design-audit.md"
   ]
 }

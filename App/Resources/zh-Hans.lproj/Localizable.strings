@@ -156,7 +156,7 @@
 "corner.topLeft" = "左上角";
 "corner.bottomRight" = "右下角";
 "corner.bottomLeft" = "左下角";
-"rest.extend.minute" = "延长 1 分钟";
+"rest.extend.twoMinutes" = "延长 2 分钟";
 "event.breakExtended" = "休息已延长";
 "power.editEnd" = "修改结束时间";
 "power.endsAt" = "结束时间";
@@ -167,3 +167,16 @@
 "appearance.system" = "跟随系统";
 "appearance.light" = "浅色";
 "appearance.dark" = "深色";
+
+"undo.eyeMarked" = "撤销补记护眼";
+"undo.movementMarked" = "撤销补记起身";
+"undo.eyeSkipped" = "撤销跳过护眼";
+"undo.movementSkipped" = "撤销跳过起身";
+"undo.bothSkipped" = "撤销跳过两项";
+
+"wake.options.off" = "请先开启防止系统睡眠，再启动会话。";
+"next.estimated" = "预计下次提醒";
+"status.movementDue" = "该起身了";
+"status.movementSoft" = "可以起身";
+"status.eyeDue" = "该护眼了";
+"status.soon" = "即将提醒";

@@ -14,7 +14,7 @@ struct RestContent: View {
             Text(timeString(model.engine.breakRemaining)).font(.system(size: 32, weight: .medium, design: .rounded)).monospacedDigit()
             ProgressView(value: max(0, min(1, 1 - model.engine.breakRemaining / duration))).tint(.green)
             if !eye {
-                Button(text("rest.extend.minute")) { model.act { $0.extendBreak(seconds: 60) } }.buttonStyle(FlowButtonStyle())
+                Button(text("rest.extend.twoMinutes")) { model.act { $0.extendBreak(seconds: 120) } }.buttonStyle(FlowButtonStyle())
             }
             Button(text("rest.endEarly")) { model.act { $0.cancelBreak() } }.buttonStyle(FlowButtonStyle())
             Text(text("rest.end.help")).font(.system(size: 10)).foregroundStyle(.secondary)

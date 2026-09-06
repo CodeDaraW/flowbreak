@@ -8,7 +8,18 @@ final class SettingsStore: ObservableObject {
     @Published var policy: BreakPolicy { didSet { save() } }
     @Published var appearance: String { didSet { defaults.set(appearance, forKey: "appearance") } }
     @Published var language: String { didSet { defaults.set(language, forKey: "language") } }
-    @Published var keepDisplayOn: Bool { didSet { defaults.set(keepDisplayOn, forKey: "keepDisplayOn") } }
+    @Published var preventSystemSleep: Bool {
+        didSet {
+            defaults.set(preventSystemSleep, forKey: "preventSystemSleep")
+            if !preventSystemSleep && keepDisplayOn { keepDisplayOn = false }
+        }
+    }
+    @Published var keepDisplayOn: Bool {
+        didSet {
+            defaults.set(keepDisplayOn, forKey: "keepDisplayOn")
+            if keepDisplayOn && !preventSystemSleep { preventSystemSleep = true }
+        }
+    }
     @Published var reminderScreen: String { didSet { defaults.set(reminderScreen, forKey: "reminderScreen") } }
     @Published var reminderCorner: String { didSet { defaults.set(reminderCorner, forKey: "reminderCorner") } }
     @Published var reminderSound: Bool { didSet { defaults.set(reminderSound, forKey: "reminderSound") } }
@@ -34,7 +45,9 @@ final class SettingsStore: ObservableObject {
         }
         appearance = defaults.string(forKey: "appearance") ?? "system"
         language = defaults.string(forKey: "language") ?? "system"
-        keepDisplayOn = defaults.object(forKey: "keepDisplayOn") as? Bool ?? true
+        let savedDisplayOn = defaults.object(forKey: "keepDisplayOn") as? Bool ?? true
+        keepDisplayOn = savedDisplayOn
+        preventSystemSleep = savedDisplayOn || (defaults.object(forKey: "preventSystemSleep") as? Bool ?? true)
         reminderScreen = defaults.string(forKey: "reminderScreen") ?? "current"
         reminderCorner = defaults.object(forKey: "reminderCorner") as? String ?? "topRight"
         reminderSound = defaults.object(forKey: "reminderSound") as? Bool ?? false

@@ -33,7 +33,7 @@ final class ReminderPresenter {
 
     func showRest() {
         guard let model else { return }
-        _ = present(AnyView(RestContent(model: model).padding(12).background(FlowStyle.canvas, in: RoundedRectangle(cornerRadius: 16))), height: 310)
+        _ = present(AnyView(RestContent(model: model).padding(12).background(FlowStyle.canvas, in: RoundedRectangle(cornerRadius: 16))), height: model.engine.session.activeBreak == .movement ? 380 : 310)
         resting = true
         if model.settings.fullscreenRest, model.engine.session.activeBreak == .movement,
            let screen = destinationScreen(model.settings.reminderScreen) {
@@ -131,8 +131,8 @@ private struct ReminderView: View {
                     Button(text("eye.start")) { model.act { $0.beginBreak(.eye) } }.buttonStyle(FlowButtonStyle(prominent: !reminder.movement))
                 }
                 HStack {
-                    if model.settings.showSnooze3 { Button(text("snooze.3")) { model.act { $0.snooze(seconds: 180) } } }
-                    if model.settings.showSnooze5 { Button(text("snooze.5")) { model.act { $0.snooze(seconds: 300) } } }
+                    if model.settings.showSnooze3 { Button(text("snooze.3")) { model.act { $0.snooze(seconds: 180, kind: reminder.eye && reminder.movement ? nil : (reminder.eye ? .eye : .movement)) } } }
+                    if model.settings.showSnooze5 { Button(text("snooze.5")) { model.act { $0.snooze(seconds: 300, kind: reminder.eye && reminder.movement ? nil : (reminder.eye ? .eye : .movement)) } } }
                 }.buttonStyle(FlowButtonStyle())
                 if reminder.movement && !reminder.strong {
                     Button(text("movement.wait")) { model.act { $0.waitUntilStrong() } }.buttonStyle(.borderless)

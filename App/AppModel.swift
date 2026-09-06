@@ -39,6 +39,10 @@ final class AppModel: ObservableObject {
         if engine.idleSeconds >= engine.policy.idlePauseThreshold { return "status.idle" }
         if engine.isWaitingForStrong { return "status.waiting" }
         if engine.time < engine.snoozeUntil { return "status.snoozed" }
+        if engine.session.movementElapsed >= engine.policy.movementStrongInterval { return "status.movementDue" }
+        if engine.session.movementElapsed >= engine.policy.movementSoftInterval { return "status.movementSoft" }
+        if engine.session.eyeElapsed >= engine.policy.eyeInterval { return "status.eyeDue" }
+        if let next = engine.nextReminderEstimate, next.seconds <= 120 { return "status.soon" }
         return "status.working"
     }
 
@@ -48,6 +52,8 @@ final class AppModel: ObservableObject {
         if engine.session.activeBreak != nil { return "leaf.fill" }
         if engine.session.movementElapsed >= engine.policy.movementStrongInterval { return "figure.walk.circle.fill" }
         if engine.session.eyeElapsed >= engine.policy.eyeInterval { return "eye.circle" }
+        if let next = engine.nextReminderEstimate, next.seconds <= 120 { return "clock.badge.exclamationmark" }
+        if !engine.available || engine.idleSeconds >= engine.policy.idlePauseThreshold { return "pause.circle" }
         return "leaf"
     }
 
@@ -146,6 +152,7 @@ final class AppModel: ObservableObject {
     }
 
     func startWake(seconds: Double?, agent: Bool) {
+        guard settings.preventSystemSleep else { return }
         pulse(present: false)
         do {
             try power.startSession(engine: &engine, seconds: seconds, agent: agent,

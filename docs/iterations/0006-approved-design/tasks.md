@@ -7,3 +7,5 @@
 - [ ] D5 Run make check and Computer Use acceptance; archive screenshots and update requirement evidence.
 
 - [ ] D6 Finish CU evidence for deliberate-input interruption, reminder hover/expanded dismissal, power end edit, full-screen rest, multi-display fallback and settings restart. Resume after Mac unlock; do not infer PASS from core tests.
+
+- [x] D7 Audit all 13 r02 pages; reconcile per-cycle snooze persistence, 2-minute extension, specific undo labels, deadline/next-reminder information and pre-start power configuration. See design-audit.md; 50 tests/build passed.

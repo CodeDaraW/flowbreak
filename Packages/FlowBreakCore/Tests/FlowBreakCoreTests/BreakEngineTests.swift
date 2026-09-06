@@ -362,3 +362,97 @@ private func work(_ engine: inout BreakEngine, _ seconds: Int) {
     #expect(engine.session.eyeElapsed == 105)
     #expect(engine.session.movementElapsed == 105)
 }
+
+@Test func eyeCorrectionClearsOnlyEyeOwnedSnooze() {
+    var engine = BreakEngine()
+    work(&engine, 1200)
+    engine.snooze(seconds: 180, kind: .eye)
+    engine.snooze(seconds: 300, kind: .movement)
+    engine.markRest(.eye)
+    #expect(engine.eyeSnoozeUntil == 0)
+    #expect(engine.movementSnoozeUntil == 1500)
+    #expect(engine.automaticallySuppressed)
+    #expect(engine.undoEvent == "eyeMarked")
+    engine.undo()
+    #expect(engine.eyeSnoozeUntil == 1380)
+    #expect(engine.movementSnoozeUntil == 1500)
+}
+
+@Test func startingRestClearsCoveredSnoozeOwnership() {
+    var engine = BreakEngine()
+    engine.snooze(seconds: 300)
+    engine.beginBreak(.eye)
+    #expect(engine.eyeSnoozeUntil == 0)
+    #expect(engine.movementSnoozeUntil == 300)
+    engine.cancelBreak()
+    engine.beginBreak(.movement)
+    #expect(engine.snoozeUntil == 0)
+}
+
+@Test func singleEyeSnoozeStillSuppressesStrongMovement() {
+    var engine = BreakEngine()
+    work(&engine, 3480)
+    engine.snooze(seconds: 300, kind: .eye)
+    work(&engine, 120)
+    engine.tick(now: 3602, idle: 2)
+    #expect(engine.reminder == nil)
+    #expect(engine.movementSnoozeUntil == 0)
+    work(&engine, 178)
+    engine.tick(now: 3782, idle: 2)
+    #expect(engine.reminder == Reminder(eye: true, movement: true, strong: true))
+}
+
+@Test func snoozeOwnershipSurvivesSnapshotAndLegacyStillDecodes() throws {
+    var engine = BreakEngine()
+    engine.snooze(seconds: 180, kind: .eye)
+    let date = Date(timeIntervalSince1970: 100)
+    let encoded = try JSONEncoder().encode(engine.snapshot(at: date))
+    let decoded = try JSONDecoder().decode(SessionSnapshot.self, from: encoded)
+    var restored = BreakEngine(now: 500)
+    restored.restore(decoded, at: date.addingTimeInterval(10))
+    #expect(restored.eyeSnoozeUntil == 670)
+    #expect(restored.movementSnoozeUntil == 500)
+    restored.markRest(.eye)
+    restored.tick(now: 502, idle: 2)
+    #expect(!restored.automaticallySuppressed)
+    #expect(restored.snoozeUntil <= restored.time)
+    var object = try #require(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+    object.removeValue(forKey: "eyeSnoozeRemaining")
+    object.removeValue(forKey: "movementSnoozeRemaining")
+    let legacy = try JSONDecoder().decode(SessionSnapshot.self, from: JSONSerialization.data(withJSONObject: object))
+    var oldRestored = BreakEngine(now: 500)
+    oldRestored.restore(legacy, at: date)
+    #expect(oldRestored.eyeSnoozeUntil == 680)
+    #expect(oldRestored.movementSnoozeUntil == 680)
+}
+
+@Test func reminderEstimateHonorsMergeAndSnooze() {
+    var engine = BreakEngine()
+    #expect(engine.nextReminderEstimate == ReminderEstimate(seconds: 1200, eye: true, movement: false))
+    work(&engine, 2300)
+    #expect(engine.nextReminderEstimate == ReminderEstimate(seconds: 100, eye: true, movement: true))
+    engine.snooze(seconds: 300, kind: .eye)
+    #expect(engine.nextReminderEstimate == ReminderEstimate(seconds: 300, eye: true, movement: true))
+}
+
+@Test func dismissedEyeEstimateMovesToMovementAndHidesWhilePaused() throws {
+    var engine = BreakEngine()
+    work(&engine, 1200)
+    engine.tick(now: 1202, idle: 2)
+    engine.markPresented(try #require(engine.reminder))
+    #expect(engine.nextReminderEstimate?.seconds == 1198)
+    engine.pauseTiming()
+    #expect(engine.nextReminderEstimate == nil)
+    engine.resumeTiming()
+    engine.setSharing(true)
+    #expect(engine.nextReminderEstimate == nil)
+}
+
+@Test func extendedBreakProgressUsesExtendedTotal() {
+    var engine = BreakEngine()
+    engine.beginBreak(.movement)
+    engine.tick(now: 30, idle: 30)
+    engine.extendBreak(seconds: 120)
+    #expect(engine.breakDuration == 300)
+    #expect(engine.breakRemaining == 270)
+}

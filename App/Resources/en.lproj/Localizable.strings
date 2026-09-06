@@ -156,7 +156,7 @@
 "corner.topLeft" = "Top left";
 "corner.bottomRight" = "Bottom right";
 "corner.bottomLeft" = "Bottom left";
-"rest.extend.minute" = "Extend by 1 minute";
+"rest.extend.twoMinutes" = "Extend by 1 minute";
 "event.breakExtended" = "Break extended";
 "power.editEnd" = "Change end time";
 "power.endsAt" = "Ends at";
@@ -167,3 +167,16 @@
 "appearance.system" = "Follow system";
 "appearance.light" = "Light";
 "appearance.dark" = "Dark";
+
+"undo.eyeMarked" = "Undo eye rest mark";
+"undo.movementMarked" = "Undo movement rest mark";
+"undo.eyeSkipped" = "Undo eye skip";
+"undo.movementSkipped" = "Undo movement skip";
+"undo.bothSkipped" = "Undo both skips";
+
+"wake.options.off" = "Enable prevention of system sleep before starting.";
+"next.estimated" = "Next reminder (estimated)";
+"status.movementDue" = "Movement overdue";
+"status.movementSoft" = "Ready to move";
+"status.eyeDue" = "Eye rest due";
+"status.soon" = "Reminder soon";
