@@ -1,0 +1,74 @@
+import AppKit
+import SwiftUI
+import Combine
+
+/// Own the status button and presentation independently of SwiftUI scene reconstruction.
+@MainActor
+final class MenuBarController: NSObject {
+    private let model: AppModel
+    private let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+    private let popover = NSPopover()
+    private var subscription: AnyCancellable?
+
+    init(model: AppModel) {
+        self.model = model
+        super.init()
+        popover.behavior = .transient
+        popover.animates = false
+        popover.contentSize = NSSize(width: 390, height: 650)
+        let host = NSHostingController(rootView: DashboardView(model: model))
+        host.sizingOptions = []
+        popover.contentViewController = host
+        if let button = item.button {
+            button.target = self
+            button.action = #selector(clicked(_:))
+            button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+            button.setAccessibilityLabel("FlowBreak")
+            button.toolTip = "FlowBreak"
+        }
+        updateButton()
+        subscription = model.objectWillChange.sink { [weak self] in
+            Task { @MainActor in self?.updateButton() }
+        }
+    }
+
+    private func updateButton() {
+        guard let button = item.button else { return }
+        let image = NSImage(systemSymbolName: model.symbol, accessibilityDescription: "FlowBreak")
+        image?.isTemplate = true
+        button.image = image
+        button.imagePosition = .imageLeading
+        var title = ""
+        if !model.engine.notificationsQuiet {
+            if model.engine.session.activeBreak != nil { title = timeString(model.engine.breakRemaining) }
+            else if let remaining = model.engine.wakeRemaining { title = timeString(remaining) }
+        }
+        if button.title != title { button.title = title }
+    }
+
+    @objc private func clicked(_ sender: NSStatusBarButton) {
+        if NSApp.currentEvent?.type == .rightMouseUp {
+            popover.performClose(nil)
+            let menu = NSMenu()
+            let open = menu.addItem(withTitle: model.settings.text("menu.open"), action: #selector(openDashboard), keyEquivalent: "")
+            open.target = self
+            menu.addItem(.separator())
+            let quit = menu.addItem(withTitle: model.settings.text("quit"), action: #selector(quitApplication), keyEquivalent: "q")
+            quit.target = self
+            menu.popUp(positioning: nil, at: NSPoint(x: 0, y: sender.bounds.minY), in: sender)
+        } else if popover.isShown {
+            popover.performClose(nil)
+        } else {
+            openDashboard()
+        }
+    }
+
+    @objc func openDashboard() {
+        guard let button = item.button else { return }
+        NSApp.activate(ignoringOtherApps: true)
+        if !popover.isShown { popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY) }
+        popover.contentViewController?.view.window?.makeKey()
+    }
+
+    @objc private func quitApplication() { NSApp.terminate(nil) }
+}

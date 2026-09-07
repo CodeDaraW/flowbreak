@@ -7,11 +7,13 @@
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
-      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift",
+      "App/MenuBarController.swift"
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
-      "docs/iterations/0006-approved-design/verification.md"
+      "docs/iterations/0006-approved-design/verification.md",
+      "docs/iterations/0008-menu-bar-response/verification.md"
     ]
   },
   {

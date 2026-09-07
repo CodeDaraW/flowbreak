@@ -264,9 +264,11 @@ final class AppModel: ObservableObject {
 final class AppDelegate: NSObject, NSApplicationDelegate {
     let model = AppModel()
     private var acceptanceWindow: NSWindow?
+    private var menuBar: MenuBarController?
     func applicationDidFinishLaunching(_ notification: Notification) {
         if AcceptanceSession.directory != nil { NSApplication.shared.setActivationPolicy(.regular) }
         model.start()
+        menuBar = MenuBarController(model: model)
         if AcceptanceSession.directory != nil {
             let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 390, height: 650),
                                   styleMask: [.titled, .closable, .miniaturizable], backing: .buffered, defer: false)
@@ -277,6 +279,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             NSApplication.shared.activate(ignoringOtherApps: true)
             acceptanceWindow = window
         }
+    }
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        menuBar?.openDashboard()
+        return true
     }
     func applicationWillTerminate(_ notification: Notification) { model.stop() }
 }

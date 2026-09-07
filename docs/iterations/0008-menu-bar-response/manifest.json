@@ -1,0 +1,17 @@
+{
+  "id": "0008-menu-bar-response",
+  "status": "completed",
+  "requirements": [
+    "FB-001",
+    "FB-009",
+    "FB-011"
+  ],
+  "decisions": [
+    "docs/decisions/0006-explicit-menu-bar.md"
+  ],
+  "artifacts": [
+    "plan.md",
+    "tasks.md",
+    "verification.md"
+  ]
+}

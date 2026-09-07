@@ -193,3 +193,4 @@
 "focus.openSettings" = "Open Focus settings";
 "event.focusQuietStarted" = "Focus quiet started";
 "event.focusQuietEnded" = "Focus quiet ended";
+"menu.open" = "Open FlowBreak";

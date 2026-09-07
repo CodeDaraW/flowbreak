@@ -193,3 +193,4 @@
 "focus.openSettings" = "打开专注模式设置";
 "event.focusQuietStarted" = "勿扰联动静默开始";
 "event.focusQuietEnded" = "勿扰联动静默结束";
+"menu.open" = "打开 FlowBreak";
