@@ -17,7 +17,6 @@ final class ReminderPresenter {
     private var expanded = false
     private var currentReminder: Reminder?
     private var resting = false
-    private var outsideMonitor: Any?
     var isVisible: Bool { panel?.isVisible == true }
 
     init(model: AppModel) { self.model = model }
@@ -54,7 +53,8 @@ final class ReminderPresenter {
         hide()
         let window = ReminderPanel(contentRect: NSRect(x: 0, y: 0, width: 370, height: height),
                                    styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
-        window.level = .floating
+        // Above ordinary app, floating and modal windows without taking input focus.
+        window.level = .popUpMenu
         window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .ignoresCycle]
         window.isReleasedWhenClosed = false
         window.hidesOnDeactivate = false
@@ -69,9 +69,6 @@ final class ReminderPresenter {
         panel = window
         reposition()
         window.orderFrontRegardless()
-        outsideMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
-            Task { @MainActor in if self?.resting != true { self?.hide() } }
-        }
         return true
     }
 
@@ -123,8 +120,6 @@ final class ReminderPresenter {
         panel = nil
         currentReminder = nil
         expanded = false
-        if let outsideMonitor { NSEvent.removeMonitor(outsideMonitor) }
-        outsideMonitor = nil
     }
 
     private func destinationScreen(_ selection: String) -> NSScreen? {

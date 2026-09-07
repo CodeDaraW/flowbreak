@@ -1,0 +1,1 @@
+{"id": "0013-reminder-stacking", "status": "active", "requirements": ["FB-009", "FB-006"], "decisions": ["docs/decisions/0008-reminder-stacking.md"], "artifacts": ["plan.md", "tasks.md", "verification.md"]}
