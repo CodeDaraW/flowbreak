@@ -97,6 +97,41 @@ private struct SidebarButtonSurface: View {
     }
 }
 
+/// The card itself is the button surface; no second padded hover backdrop.
+struct FlowModeButtonStyle: ButtonStyle {
+    let active: Bool
+    func makeBody(configuration: Configuration) -> some View {
+        ModeButtonSurface(configuration: configuration, active: active)
+    }
+}
+
+private struct ModeButtonSurface: View {
+    let configuration: ButtonStyleConfiguration
+    let active: Bool
+    @Environment(\.isEnabled) private var isEnabled
+    @State private var hovering = false
+
+    var body: some View {
+        let highlighted = isEnabled && hovering
+        let pressed = isEnabled && configuration.isPressed
+        let shape = RoundedRectangle(cornerRadius: 10)
+        configuration.label
+            .padding(10)
+            .frame(maxWidth: .infinity, minHeight: 50, alignment: .leading)
+            .foregroundStyle(Color.primary)
+            .background {
+                shape.fill(active ? Color.blue.opacity(0.07) : FlowStyle.card)
+                shape.fill(Color.primary.opacity(pressed ? 0.15 : highlighted ? 0.07 : 0))
+            }
+            .overlay(shape.strokeBorder(active ? Color.blue.opacity(0.3) : FlowStyle.border))
+            .contentShape(shape)
+            .opacity(isEnabled ? 1 : 0.42)
+            .onHover { hovering = $0 }
+            .animation(.easeOut(duration: 0.12), value: highlighted)
+            .animation(.easeOut(duration: 0.08), value: pressed)
+    }
+}
+
 struct SectionCaption: View {
     let title: String
     var body: some View { Text(title).font(.system(size: 10, weight: .semibold)).foregroundStyle(.secondary) }

@@ -128,10 +128,8 @@ struct DashboardView: View {
                 }
                 Spacer(minLength: 0)
                 Image(systemName: "chevron.right").font(.system(size: 8)).foregroundStyle(.tertiary)
-            }.padding(10).frame(maxWidth: .infinity, minHeight: 50, alignment: .leading)
-                .background(active ? Color.blue.opacity(0.07) : FlowStyle.card, in: RoundedRectangle(cornerRadius: 10))
-                .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(active ? .blue.opacity(0.3) : FlowStyle.border))
-        }.buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false))
+            }
+        }.buttonStyle(FlowModeButtonStyle(active: active))
     }
 
     private func timerCard(eye: Bool) -> some View {
