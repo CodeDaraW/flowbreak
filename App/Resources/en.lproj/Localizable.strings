@@ -194,3 +194,9 @@
 "event.focusQuietStarted" = "Focus quiet started";
 "event.focusQuietEnded" = "Focus quiet ended";
 "menu.open" = "Open FlowBreak";
+
+"login.title" = "Launch at login";
+"login.help" = "Start FlowBreak automatically after you log in to this Mac.";
+"login.approval" = "Allow FlowBreak in System Settings → General → Login Items.";
+"login.settings" = "Open Login Items Settings";
+"login.error" = "Could not update the login item. Check System Settings and try again.";

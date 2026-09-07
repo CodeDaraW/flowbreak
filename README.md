@@ -65,3 +65,11 @@ SwiftPM 报 `sandbox_apply: Operation not permitted` 表示运行环境限制，
 `make run` 自动使用唯一有效的 Apple Development/Mac Developer 身份。存在多个身份时，设置 `FLOWBREAK_SIGNING_IDENTITY` 指定指纹或名称；没有身份则使用临时签名并明确提示 Focus 配置可能不可用。也可对已有构建运行 `./scripts/sign.sh`。脚本不导出私钥，不保存个人 Team ID。
 
 2026-09-07 本机已完成开发签名，系统过滤条件保存通过。此前身份无效的问题由补齐 Apple 官方 WWDR G3 中间证书解决，没有修改证书信任策略。系统勿扰开启、重启恢复、手动静默叠加及关闭后恢复提醒已验收，见迭代 0007；macOS 14 实机体验仍留待用户日常反馈。
+
+## 安装与登录启动
+
+退出正在运行的 FlowBreak 后，运行 `make check` 和 `./scripts/sign.sh`，再将 `.build/DerivedData/Build/Products/Debug/FlowBreak.app` 复制到 `/Applications/FlowBreak.app` 并打开。更新安装时先退出旧版，保留相同 bundle ID 和签名身份；用户计时与设置保存在应用包之外。
+
+在安装版的“设置 → 通用 → 登录时启动”开启；系统要求批准时按界面提示前往登录项设置。开关读取系统状态，普通启动不会重新注册已关闭的登录项。登录启动应配置到 Applications 安装版，避免开发构建路径变化。
+
+图标为项目原创叶子图形；从仓库根目录运行 `swift scripts/generate-icon.swift` 可重建全部 AppIcon PNG，生成结果纳入版本控制。

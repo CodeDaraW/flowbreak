@@ -50,6 +50,7 @@ struct SettingsView: View {
                     ForEach(["system", "light", "dark"], id: \.self) { mode in Text(settings.text("appearance." + mode)).tag(mode) }
                 }
             }
+            FlowCard { LoginItemView(settings: settings) }
             Text(settings.text("settings.privacy")).font(.callout).foregroundStyle(.secondary)
             Button(settings.text("settings.reset")) { settings.reset() }
         case "settings.timer":

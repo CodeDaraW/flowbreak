@@ -1,0 +1,17 @@
+{
+  "id": "0012-icon-login",
+  "status": "completed",
+  "requirements": [
+    "FB-001",
+    "FB-011",
+    "FB-012"
+  ],
+  "decisions": [
+    "docs/decisions/0007-login-item.md"
+  ],
+  "artifacts": [
+    "plan.md",
+    "tasks.md",
+    "verification.md"
+  ]
+}

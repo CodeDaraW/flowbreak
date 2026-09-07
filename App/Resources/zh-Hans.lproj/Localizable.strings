@@ -194,3 +194,9 @@
 "event.focusQuietStarted" = "勿扰联动静默开始";
 "event.focusQuietEnded" = "勿扰联动静默结束";
 "menu.open" = "打开 FlowBreak";
+
+"login.title" = "登录时启动";
+"login.help" = "登录这台 Mac 后自动启动 FlowBreak。";
+"login.approval" = "请在系统设置 → 通用 → 登录项中允许 FlowBreak。";
+"login.settings" = "打开登录项设置";
+"login.error" = "无法更新登录项，请检查系统设置后重试。";
