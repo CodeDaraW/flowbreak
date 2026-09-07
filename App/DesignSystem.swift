@@ -66,6 +66,37 @@ private struct FlowButtonSurface: View {
     }
 }
 
+/// Selection and hover share a single padded surface, so their edges cannot drift.
+struct FlowSidebarButtonStyle: ButtonStyle {
+    let selected: Bool
+    func makeBody(configuration: Configuration) -> some View {
+        SidebarButtonSurface(configuration: configuration, selected: selected)
+    }
+}
+
+private struct SidebarButtonSurface: View {
+    let configuration: ButtonStyleConfiguration
+    let selected: Bool
+    @State private var hovering = false
+    @Environment(\.isEnabled) private var isEnabled
+
+    var body: some View {
+        let active = isEnabled && (hovering || configuration.isPressed)
+        configuration.label
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 10)
+            .frame(minHeight: 36)
+            .foregroundStyle(selected ? Color.accentColor : Color.primary)
+            .background(RoundedRectangle(cornerRadius: 8)
+                .fill(selected ? Color.accentColor.opacity(active ? 0.18 : 0.12)
+                      : Color.primary.opacity(active ? 0.07 : 0)))
+            .contentShape(RoundedRectangle(cornerRadius: 8))
+            .opacity(isEnabled ? 1 : 0.42)
+            .onHover { hovering = $0 }
+            .animation(.easeOut(duration: 0.12), value: active)
+    }
+}
+
 struct SectionCaption: View {
     let title: String
     var body: some View { Text(title).font(.system(size: 10, weight: .semibold)).foregroundStyle(.secondary) }

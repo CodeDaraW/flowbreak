@@ -5,7 +5,11 @@ struct DashboardView: View {
     @ObservedObject var model: AppModel
     @ObservedObject private var settings: SettingsStore
     @State private var powerPage = false
-    init(model: AppModel) { self.model = model; self.settings = model.settings }
+    private let nativePopoverBackground: Bool
+    init(model: AppModel, nativePopoverBackground: Bool = false) {
+        self.model = model; self.settings = model.settings
+        self.nativePopoverBackground = nativePopoverBackground
+    }
     private func text(_ key: String) -> String { settings.text(key) }
 
     var body: some View {
@@ -105,7 +109,7 @@ struct DashboardView: View {
                     Button(text("quit")) { NSApplication.shared.terminate(nil) }.buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false)).foregroundStyle(.secondary)
                 }.font(.caption)
             }.padding(18)
-        }.frame(width: 390, height: 650).background(FlowStyle.canvas).preferredColorScheme(settings.colorScheme)
+        }.frame(width: 390, height: 650).background(nativePopoverBackground ? Color.clear : FlowStyle.canvas).preferredColorScheme(settings.colorScheme)
     }
 
     private func notice(_ message: String, symbol: String, color: Color) -> some View {

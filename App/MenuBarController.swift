@@ -9,6 +9,7 @@ final class MenuBarController: NSObject {
     private let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let popover = NSPopover()
     private var subscription: AnyCancellable?
+    private var appliedAppearance: String?
 
     init(model: AppModel) {
         self.model = model
@@ -16,7 +17,7 @@ final class MenuBarController: NSObject {
         popover.behavior = .transient
         popover.animates = false
         popover.contentSize = NSSize(width: 390, height: 650)
-        let host = NSHostingController(rootView: DashboardView(model: model))
+        let host = NSHostingController(rootView: DashboardView(model: model, nativePopoverBackground: true))
         host.sizingOptions = []
         popover.contentViewController = host
         if let button = item.button {
@@ -33,6 +34,16 @@ final class MenuBarController: NSObject {
     }
 
     private func updateButton() {
+        // AppKit may normalize an assigned appearance. Reapply only on a user preference change,
+        // never as part of the one-second timer refresh while the popover is open.
+        if appliedAppearance != model.settings.appearance {
+            appliedAppearance = model.settings.appearance
+            popover.appearance = switch model.settings.appearance {
+            case "dark": NSAppearance(named: .darkAqua)
+            case "light": NSAppearance(named: .aqua)
+            default: nil
+            }
+        }
         guard let button = item.button else { return }
         let image = NSImage(systemSymbolName: model.symbol, accessibilityDescription: "FlowBreak")
         image?.isTemplate = true

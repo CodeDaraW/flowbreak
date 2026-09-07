@@ -13,12 +13,12 @@ struct SettingsView: View {
                 Label("FlowBreak", systemImage: "leaf.fill").font(.headline).padding(.bottom, 20)
                 ForEach(Array(sections.enumerated()), id: \.element) { index, key in
                     Button { selected = key } label: {
-                        Label(settings.text(key), systemImage: symbols[index])
-                            .font(.system(size: 12, weight: .medium))
-                            .frame(maxWidth: .infinity, alignment: .leading).padding(.vertical, 10)
-                            .background(selected == key ? Color.accentColor.opacity(0.12) : .clear, in: RoundedRectangle(cornerRadius: 8))
-                            .foregroundStyle(selected == key ? Color.accentColor : .primary)
-                    }.buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false))
+                        HStack(spacing: 10) {
+                            Image(systemName: symbols[index]).frame(width: 18)
+                            Text(settings.text(key))
+                        }
+                        .font(.system(size: 12, weight: .medium))
+                    }.buttonStyle(FlowSidebarButtonStyle(selected: selected == key))
                 }
                 Spacer()
             }.padding(16).frame(width: 176).background(.quaternary.opacity(0.2))
