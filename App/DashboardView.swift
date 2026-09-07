@@ -22,7 +22,7 @@ struct DashboardView: View {
                 if let error = model.errorKey { notice(text(error), symbol: "exclamationmark.triangle", color: .red) }
                 if model.lastEvent == "breakInterrupted" { notice(text("break.interrupted"), symbol: "cursorarrow", color: .orange) }
                 if powerPage {
-                    Button { powerPage = false } label: { Label(text("nav.back"), systemImage: "chevron.left") }.buttonStyle(.plain)
+                    Button { powerPage = false } label: { Label(text("nav.back"), systemImage: "chevron.left") }.buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false))
                     PowerControls(model: model)
                 } else {
                     HStack(alignment: .top, spacing: 10) {
@@ -67,7 +67,7 @@ struct DashboardView: View {
                             Spacer()
                             Button(text(model.engine.session.timingPaused ? "timing.resume" : "wake.stop")) {
                                 model.act { if $0.session.timingPaused { $0.resumeTiming() } else { $0.stopKeepAwake() } }
-                            }.buttonStyle(.borderless)
+                            }.buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false))
                         }.font(.caption).padding(10).background(.blue.opacity(0.06), in: RoundedRectangle(cornerRadius: 9))
                     }
                     SectionCaption(title: text("rest.mark"))
@@ -78,7 +78,7 @@ struct DashboardView: View {
                     HStack(alignment: .top) {
                         Text(text("rest.mark.help")).font(.system(size: 10)).foregroundStyle(.secondary)
                         Spacer()
-                        if let event = model.engine.undoEvent { Button(text("undo." + event)) { model.act { $0.undo() } }.font(.caption).buttonStyle(.borderless) }
+                        if let event = model.engine.undoEvent { Button(text("undo." + event)) { model.act { $0.undo() } }.font(.caption).buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false)) }
                     }
                     DisclosureGroup(text("reminder.actions")) {
                         VStack(alignment: .leading, spacing: 10) {
@@ -89,7 +89,7 @@ struct DashboardView: View {
                             HStack {
                                 Button(text("eye.skip")) { model.act { $0.skip(.eye) } }
                                 Button(text("movement.skip")) { model.act { $0.skip(.movement) } }
-                            }.buttonStyle(.borderless)
+                            }.buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false))
                             Toggle(text("sharing.manual"), isOn: Binding(get: { model.engine.sharing }, set: { value in model.act { $0.setSharing(value) } }))
                                 .toggleStyle(.switch).controlSize(.small)
                             Text(text("sharing.help")).font(.caption).foregroundStyle(.secondary)
@@ -100,9 +100,9 @@ struct DashboardView: View {
                 if model.engine.sharing { notice(text("sharing.active"), symbol: "rectangle.on.rectangle.slash", color: .blue) }
                 Divider()
                 HStack {
-                    SettingsLink { Label(text("settings.title"), systemImage: "gearshape") }.buttonStyle(.plain)
+                    SettingsLink { Label(text("settings.title"), systemImage: "gearshape") }.buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false))
                     Spacer()
-                    Button(text("quit")) { NSApplication.shared.terminate(nil) }.buttonStyle(.plain).foregroundStyle(.secondary)
+                    Button(text("quit")) { NSApplication.shared.terminate(nil) }.buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false)).foregroundStyle(.secondary)
                 }.font(.caption)
             }.padding(18)
         }.frame(width: 390, height: 650).background(FlowStyle.canvas).preferredColorScheme(settings.colorScheme)
@@ -127,7 +127,7 @@ struct DashboardView: View {
             }.padding(10).frame(maxWidth: .infinity, minHeight: 50, alignment: .leading)
                 .background(active ? Color.blue.opacity(0.07) : FlowStyle.card, in: RoundedRectangle(cornerRadius: 10))
                 .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(active ? .blue.opacity(0.3) : FlowStyle.border))
-        }.buttonStyle(.plain)
+        }.buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false))
     }
 
     private func timerCard(eye: Bool) -> some View {

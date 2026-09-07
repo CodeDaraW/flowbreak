@@ -160,7 +160,7 @@ private struct ReminderView: View {
                         .font(.system(size: 12, weight: .semibold)).foregroundStyle(reminder.strong ? .orange : .blue)
                     Spacer()
                     Button { model.dismissReminder() } label: { Image(systemName: "xmark") }
-                        .buttonStyle(.plain).accessibilityLabel(text("close"))
+                        .buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false)).accessibilityLabel(text("close"))
                 }
                 Text(text(reminder.movement ? (reminder.strong ? "reminder.strong" : "reminder.movement.gentle") : "rest.lookAway"))
                     .font(.system(size: 20, weight: .semibold))
@@ -176,7 +176,7 @@ private struct ReminderView: View {
                     if model.settings.showSnooze5 { Button(text("snooze.5")) { model.act { $0.snooze(seconds: 300, kind: reminder.eye && reminder.movement ? nil : (reminder.eye ? .eye : .movement)) } } }
                 }.buttonStyle(FlowButtonStyle())
                 if reminder.movement && !reminder.strong {
-                    Button(text("movement.wait")) { model.act { $0.waitUntilStrong() } }.buttonStyle(.borderless)
+                    Button(text("movement.wait")) { model.act { $0.waitUntilStrong() } }.buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false))
                 }
                 DisclosureGroup(text("reminder.skip.options"), isExpanded: $expanded) {
                     VStack(alignment: .leading, spacing: 10) {
@@ -186,11 +186,11 @@ private struct ReminderView: View {
                             Button(text("reminder.skip.both")) { model.act { $0.skipBoth() } }
                         }
                         Text(text("reminder.skip.help")).font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
-                    }.padding(.top, 8).buttonStyle(.borderless)
+                    }.padding(.top, 8).buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false))
                 }.font(.caption).onChange(of: expanded) { _, value in model.setReminderExpanded(value) }
                 Button(text(reminder.movement ? "movement.done" : "eye.done")) {
                     model.act { $0.markRest(reminder.movement ? .movement : .eye) }
-                }.buttonStyle(.borderless).font(.caption)
+                }.buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false)).font(.caption)
             }.fixedSize(horizontal: false, vertical: true).padding(20)
         }.frame(width: 370).frame(maxHeight: .infinity)
             .background(FlowStyle.canvas, in: RoundedRectangle(cornerRadius: 16))

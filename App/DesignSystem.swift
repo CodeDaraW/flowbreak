@@ -23,15 +23,46 @@ struct FlowCard<Content: View>: View {
 struct FlowButtonStyle: ButtonStyle {
     var prominent = false
     var tint: Color = .accentColor
+    var quiet = false
+    var fullWidth = true
+
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label.font(.system(size: 12, weight: .semibold))
-            .frame(maxWidth: .infinity, minHeight: 36)
-            .padding(.horizontal, 8)
+        FlowButtonSurface(configuration: configuration, prominent: prominent,
+                          tint: tint, quiet: quiet, fullWidth: fullWidth)
+    }
+}
+
+private struct FlowButtonSurface: View {
+    let configuration: ButtonStyleConfiguration
+    let prominent: Bool
+    let tint: Color
+    let quiet: Bool
+    let fullWidth: Bool
+    @Environment(\.isEnabled) private var isEnabled
+    @State private var hovering = false
+
+    private var highlighted: Bool { isEnabled && hovering }
+    private var pressed: Bool { isEnabled && configuration.isPressed }
+    var body: some View {
+        configuration.label
+            .font(.system(size: 12, weight: quiet ? .medium : .semibold))
+            .padding(.horizontal, quiet ? 8 : 12)
+            .frame(minWidth: 32, maxWidth: fullWidth ? .infinity : nil, minHeight: quiet ? 32 : 40)
             .foregroundStyle(prominent ? Color.white : Color.primary)
-            .background(prominent ? tint : FlowStyle.card, in: RoundedRectangle(cornerRadius: 9))
-            .overlay(RoundedRectangle(cornerRadius: 9).strokeBorder(prominent ? .clear : FlowStyle.border))
-            .opacity(configuration.isPressed ? 0.65 : 1)
+            .background {
+                RoundedRectangle(cornerRadius: 9)
+                    .fill(prominent ? tint : (quiet ? Color.clear : FlowStyle.card))
+                RoundedRectangle(cornerRadius: 9)
+                    .fill((prominent ? Color.black : Color.primary)
+                        .opacity(pressed ? 0.15 : (highlighted ? 0.07 : 0)))
+            }
+            .overlay(RoundedRectangle(cornerRadius: 9)
+                .strokeBorder(quiet || prominent ? Color.clear : FlowStyle.border))
             .contentShape(RoundedRectangle(cornerRadius: 9))
+            .opacity(isEnabled ? 1 : 0.42)
+            .onHover { hovering = $0 }
+            .animation(.easeOut(duration: 0.12), value: highlighted)
+            .animation(.easeOut(duration: 0.08), value: pressed)
     }
 }
 

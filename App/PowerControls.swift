@@ -44,7 +44,7 @@ struct PowerControls: View {
                 Button(text("power.editEnd")) {
                     endDate = Date().addingTimeInterval(model.engine.wakeRemaining ?? 1800)
                     editingEnd.toggle()
-                }.buttonStyle(.borderless)
+                }.buttonStyle(FlowButtonStyle(quiet: true, fullWidth: false))
                 if editingEnd {
                     DatePicker(text("power.endsAt"), selection: $endDate, in: Date()..., displayedComponents: [.date, .hourAndMinute])
                     Button(text("power.apply")) {
