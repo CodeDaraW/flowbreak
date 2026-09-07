@@ -1,11 +1,9 @@
-# Contributing
+# Contribution policy / 贡献政策
 
-FlowBreak targets macOS 14+ on Apple Silicon only. See [README](README.en.md) for setup and [AGENTS.md](AGENTS.md) for contributor and agent rules.
+FlowBreak is a personal project built entirely through Vibe Coding. It is open source under the [MIT License](LICENSE), but does not accept external contributions, including pull requests.
 
-1. Describe the behavior change in a specification, preserving stable `FB-*` IDs.
-2. Create an iteration from [templates](docs/templates/iteration.md); list scope, non-goals, requirement IDs and acceptance checks.
-3. Add an ADR for a material architectural decision; reference any research and rejected options.
-4. Implement a narrow change, maintain Chinese and English UI strings together, and add meaningful behavioral tests.
-5. Run `make check`, record actual outcomes in the iteration verification file, and update implementation status only as far as the evidence supports.
+You are welcome to use, fork and modify the project under the MIT license. The specification and iteration workflow in [AGENTS.md](AGENTS.md) documents how the project is maintained; it is not an invitation to submit contributions.
 
-PR descriptions should explain the concrete behavior change, relevant requirement/ADR IDs, validation and remaining limitations. Do not include private runtime data. Contributions are under the [MIT license](LICENSE).
+FlowBreak 是完全通过 Vibe Coding 开发的个人项目，以 [MIT License](LICENSE) 开源，但不接受外部贡献，包括 Pull Request。
+
+欢迎按 MIT 许可使用、Fork 和自行修改。[AGENTS.md](AGENTS.md) 中的规格与迭代流程用于项目自身维护，不代表邀请外部贡献。

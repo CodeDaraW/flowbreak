@@ -33,8 +33,14 @@ Eye breaks reset only eye time; movement breaks reset both. Snooze suppresses ev
 
 Snapshots and up to 1,000 events stay in `~/Library/Application Support/FlowBreak/`. Settings use local UserDefaults. Damaged or newer-format data is preserved and surfaced as an error. Snapshots save every 15 seconds and on actions; a crash can lose the last 15 seconds. Relaunch restores counters and snooze, not power assertions or paused mode. Quit an already-running build before `make run` to load new code.
 
-## Contribute
+## Engineering documentation
 
-Start with [AGENTS.md](AGENTS.md), the [documentation workflow](docs/README.md) and the [current iteration](docs/iterations/0006-approved-design/plan.md). Behavioral changes require linked specifications, decision records and validation evidence. Engineering documentation currently uses Chinese; both product languages are maintained together.
+Start with [AGENTS.md](AGENTS.md), the [documentation workflow](docs/README.md) and its iteration index. Behavioral changes require linked specifications, decision records and validation evidence. Engineering documentation currently uses Chinese; both product languages are maintained together.
 
-The repository is local, with no remote configured. See [CONTRIBUTING.md](CONTRIBUTING.md) and [MIT license](LICENSE). Never commit personal accounts, certificates, runtime logs or raw chat exports.
+## Open source and contribution policy
+
+This project was built entirely through **Vibe Coding**: AI generated and iterated on the code under the author’s prompts and feedback.
+
+FlowBreak is open source under the [MIT License](LICENSE). **External contributions, including pull requests, are not accepted.** See the [contribution policy](CONTRIBUTING.md). You are welcome to use, fork and modify it under the MIT license.
+
+Never commit personal accounts, certificates, runtime logs or raw chat exports.

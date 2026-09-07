@@ -1,0 +1,13 @@
+{
+  "id": "0014-public-release-audit",
+  "status": "completed",
+  "requirements": [
+    "FB-012"
+  ],
+  "decisions": [],
+  "artifacts": [
+    "plan.md",
+    "tasks.md",
+    "verification.md"
+  ]
+}

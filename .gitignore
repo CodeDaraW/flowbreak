@@ -13,3 +13,12 @@ xcuserdata/
 *.mobileprovision
 *.provisionprofile
 workspaces/
+
+# Local signing material and credentials
+*.pfx
+*.pem
+*.key
+*.cer
+*.cert
+*.keychain
+*.keychain-db

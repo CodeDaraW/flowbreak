@@ -37,9 +37,9 @@ SwiftPM 报 `sandbox_apply: Operation not permitted` 表示运行环境限制，
 - 重启恢复工作累计和剩余静默；电源断言与暂停不自动恢复。快照每 15 秒与用户动作保存，崩溃最多可能丢失最近 15 秒累计。
 - 已有应用运行时请先从菜单栏退出，再 `make run`，确保加载新构建。
 
-## AI 与贡献者入口
+## 工程文档
 
-先读 [AGENTS.md](AGENTS.md)，再读 [文档工作流](docs/README.md) 和 [当前迭代](docs/iterations/0007-focus-quiet/plan.md)。所有行为变更必须先关联规格，再记录实现与验证；重要决策进入 ADR。
+先读 [AGENTS.md](AGENTS.md)，再读 [文档工作流与迭代索引](docs/README.md)。所有行为变更必须先关联规格，再记录实现与验证；重要决策进入 ADR。
 
 - `App/`：SwiftUI 菜单栏与设置、macOS 集成入口。
 - `Packages/FlowBreakCore/`：确定性规则，不含 UI、IOKit 和真实时钟。
@@ -52,7 +52,11 @@ SwiftPM 报 `sandbox_apply: Operation not permitted` 表示运行环境限制，
 
 ## 开源
 
-[MIT](LICENSE)。欢迎贡献，流程见 [CONTRIBUTING.md](CONTRIBUTING.md)。Git 仅在本地初始化，尚未配置远程仓库、CI 托管或正式发布身份。不要提交个人账号、证书、用户运行日志或原始聊天导出。
+本项目完全通过 **Vibe Coding** 开发，代码由 AI 在作者的提示与反馈下生成和迭代。
+
+项目以 [MIT License](LICENSE) 开源。**不接受外部贡献，包括 Pull Request**；详见 [贡献政策](CONTRIBUTING.md)。欢迎按 MIT 许可使用、Fork 和自行修改。
+
+不要提交个人账号、证书、用户运行日志或原始聊天导出。
 
 ## 原生 E2E 隔离入口（仅 Debug）
 
