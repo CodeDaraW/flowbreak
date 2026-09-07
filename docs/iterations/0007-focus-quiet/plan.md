@@ -1,6 +1,6 @@
 # Iteration 0007: 勿扰联动静默
 
-Status: blocked (development signing identity required)
+Status: completed (signed native activation, restart, overlap and recovery verified)
 
 ## 用户变更
 

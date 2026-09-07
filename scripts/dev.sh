@@ -31,7 +31,7 @@ case "${1:-check}" in
     ;;
   run)
     build
-    codesign --force --sign - .build/DerivedData/Build/Products/Debug/FlowBreak.app
+    ./scripts/sign.sh
     open .build/DerivedData/Build/Products/Debug/FlowBreak.app
     ;;
   *) echo "Usage: $0 generate|build|test|check|run" >&2; exit 2 ;;

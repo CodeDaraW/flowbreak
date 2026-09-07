@@ -98,7 +98,7 @@
   },
   {
     "id": "FB-007",
-    "status": "partial",
+    "status": "implemented",
     "spec": "docs/specs/product.md",
     "iteration": "0007-focus-quiet",
     "implementation": [
@@ -112,7 +112,7 @@
       "docs/iterations/0006-approved-design/verification.md",
       "docs/iterations/0007-focus-quiet/verification.md"
     ],
-    "note": "Feishu-specific detection superseded by accepted one-time DND Focus Filter setup. Implementation and core rules present; native activation/deactivation blocked by missing development signing identity. Manual quiet remains available."
+    "note": "Official one-time DND Focus Filter setup and signed native activation/restart/manual overlap/recovery verified on macOS26.6.2. macOS14 runtime and audible sounds remain user-deferred. Unknown-query and removal variants have no additional native evidence."
   },
   {
     "id": "FB-008",
