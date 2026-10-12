@@ -194,6 +194,8 @@
 "event.focusQuietStarted" = "Focus quiet started";
 "event.focusQuietEnded" = "Focus quiet ended";
 "menu.open" = "Open FlowBreak";
+"menu.countdown.minutes" = "%d min";
+"menu.countdown.seconds" = "%d sec";
 
 "login.title" = "Launch at login";
 "login.help" = "Start FlowBreak automatically after you log in to this Mac.";

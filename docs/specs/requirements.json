@@ -3,17 +3,21 @@
     "id": "FB-001",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0006-approved-design",
+    "iteration": "0016-menu-bar-alignment",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
       "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift",
-      "App/MenuBarController.swift"
+      "App/MenuBarController.swift",
+      "App/MenuBarCountdown.swift",
+      "App/MenuBarLabel.swift"
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
       "docs/iterations/0006-approved-design/verification.md",
-      "docs/iterations/0008-menu-bar-response/verification.md"
+      "docs/iterations/0008-menu-bar-response/verification.md",
+      "docs/iterations/0015-countdown-and-rest-polish/verification.md",
+      "docs/iterations/0016-menu-bar-alignment/verification.md"
     ]
   },
   {
@@ -68,16 +72,19 @@
     "id": "FB-005",
     "status": "implemented",
     "spec": "docs/specs/product.md",
-    "iteration": "0006-approved-design",
+    "iteration": "0015-countdown-and-rest-polish",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
-      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift",
+      "App/MenuBarController.swift",
+      "App/ReminderPresenter.swift"
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
       "docs/iterations/0006-approved-design/verification.md",
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift",
+      "docs/iterations/0015-countdown-and-rest-polish/verification.md"
     ]
   },
   {
@@ -118,31 +125,36 @@
     "id": "FB-008",
     "status": "implemented",
     "spec": "docs/specs/product.md",
-    "iteration": "0006-approved-design",
+    "iteration": "0015-countdown-and-rest-polish",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
-      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift",
+      "App/PowerControls.swift"
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
       "docs/iterations/0006-approved-design/verification.md",
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift",
+      "docs/iterations/0015-countdown-and-rest-polish/verification.md"
     ]
   },
   {
     "id": "FB-009",
     "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0006-approved-design",
+    "iteration": "0015-countdown-and-rest-polish",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
-      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift",
+      "App/MenuBarController.swift",
+      "App/ReminderPresenter.swift"
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
-      "docs/iterations/0006-approved-design/verification.md"
+      "docs/iterations/0006-approved-design/verification.md",
+      "docs/iterations/0015-countdown-and-rest-polish/verification.md"
     ],
     "note": "Native panels verified on current macOS 26.6.2. Physical multi-display/unplug and cross-Space input continuity remain unverified."
   },
@@ -165,7 +177,7 @@
     "id": "FB-011",
     "status": "implemented",
     "spec": "docs/specs/product.md",
-    "iteration": "0006-approved-design",
+    "iteration": "0016-menu-bar-alignment",
     "implementation": [
       "App/AppModel.swift",
       "App/DashboardView.swift",
@@ -173,12 +185,16 @@
       "App/SettingsStore.swift",
       "App/SettingsView.swift",
       "App/Resources/en.lproj/Localizable.strings",
-      "App/Resources/zh-Hans.lproj/Localizable.strings"
+      "App/Resources/zh-Hans.lproj/Localizable.strings",
+      "App/MenuBarCountdown.swift",
+      "App/MenuBarLabel.swift"
     ],
     "verification": [
       "docs/iterations/0004-reminder-app/verification.md",
       "docs/iterations/0006-approved-design/verification.md",
-      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift"
+      "Packages/FlowBreakCore/Tests/FlowBreakCoreTests/BreakEngineTests.swift",
+      "docs/iterations/0015-countdown-and-rest-polish/verification.md",
+      "docs/iterations/0016-menu-bar-alignment/verification.md"
     ]
   },
   {

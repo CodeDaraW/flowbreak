@@ -57,7 +57,7 @@ final class SettingsStore: ObservableObject {
         fullscreenRest = defaults.object(forKey: "fullscreenRest") as? Bool ?? false
         showSnooze3 = defaults.object(forKey: "showSnooze3") as? Bool ?? true
         showSnooze5 = defaults.object(forKey: "showSnooze5") as? Bool ?? true
-        weakDuration = defaults.object(forKey: "weakDuration") as? Double ?? 8
+        weakDuration = defaults.object(forKey: "weakDuration") as? Double ?? 30
         strongDuration = defaults.object(forKey: "strongDuration") as? Double ?? 15
         strongRepeat = defaults.object(forKey: "strongRepeat") as? Double ?? 600
 
@@ -89,7 +89,7 @@ final class SettingsStore: ObservableObject {
         fullscreenRest = false
         showSnooze3 = true
         showSnooze5 = true
-        weakDuration = 8
+        weakDuration = 30
         strongDuration = 15
         strongRepeat = 600
         loadFailed = false

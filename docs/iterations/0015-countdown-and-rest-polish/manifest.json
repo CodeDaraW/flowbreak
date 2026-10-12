@@ -1,0 +1,19 @@
+{
+  "id": "0015-countdown-and-rest-polish",
+  "status": "completed",
+  "requirements": [
+    "FB-001",
+    "FB-005",
+    "FB-008",
+    "FB-009",
+    "FB-011"
+  ],
+  "decisions": [
+    "docs/decisions/0006-explicit-menu-bar.md"
+  ],
+  "artifacts": [
+    "plan.md",
+    "tasks.md",
+    "verification.md"
+  ]
+}

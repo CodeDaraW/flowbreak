@@ -7,6 +7,7 @@ import AppIntents
 
 @MainActor
 final class AppModel: ObservableObject {
+    let restPanelWillShow = PassthroughSubject<Void, Never>()
     let settings = SettingsStore(defaults: AcceptanceSession.defaults)
     @Published private(set) var engine = BreakEngine()
     @Published private(set) var history: [ActivityEvent] = []

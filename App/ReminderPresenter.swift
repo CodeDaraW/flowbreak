@@ -33,7 +33,8 @@ final class ReminderPresenter {
     }
 
     func showRest() {
-        guard let model else { return }
+        guard let model, destinationScreen(model.settings.reminderScreen) != nil else { return }
+        model.restPanelWillShow.send()
         let fullscreen = model.settings.fullscreenRest && model.engine.session.activeBreak == .movement
         let content = RestContent(model: model)
             .frame(maxWidth: fullscreen ? 480 : .infinity)

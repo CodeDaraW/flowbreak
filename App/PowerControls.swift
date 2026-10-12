@@ -37,8 +37,8 @@ struct PowerControls: View {
                 if model.engine.wakeRemaining != nil {
                     HStack {
                         Text(text("wake.extend")).font(.caption)
-                        Button("+15 " + text("minutes")) { model.extendWake(seconds: 900) }
                         Button("+30 " + text("minutes")) { model.extendWake(seconds: 1800) }
+                        Button("+60 " + text("minutes")) { model.extendWake(seconds: 3600) }
                     }.buttonStyle(FlowButtonStyle())
                 }
                 Button(text("power.editEnd")) {

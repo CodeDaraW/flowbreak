@@ -9,7 +9,10 @@ final class MenuBarController: NSObject {
     private let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let popover = NSPopover()
     private var subscription: AnyCancellable?
+    private var restSubscription: AnyCancellable?
     private var appliedAppearance: String?
+    private var displayedSymbol: String?
+    private var displayedCountdown: String?
 
     init(model: AppModel) {
         self.model = model
@@ -26,6 +29,9 @@ final class MenuBarController: NSObject {
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
             button.setAccessibilityLabel("FlowBreak")
             button.toolTip = "FlowBreak"
+        }
+        restSubscription = model.restPanelWillShow.sink { [weak self] in
+            self?.popover.performClose(nil)
         }
         updateButton()
         subscription = model.objectWillChange.sink { [weak self] in
@@ -45,16 +51,19 @@ final class MenuBarController: NSObject {
             }
         }
         guard let button = item.button else { return }
-        let image = NSImage(systemSymbolName: model.symbol, accessibilityDescription: "FlowBreak")
-        image?.isTemplate = true
-        button.image = image
-        button.imagePosition = .imageLeading
         var title = ""
         if !model.engine.notificationsQuiet {
-            if model.engine.session.activeBreak != nil { title = timeString(model.engine.breakRemaining) }
-            else if let remaining = model.engine.wakeRemaining { title = timeString(remaining) }
+            if model.engine.session.activeBreak != nil { title = menuBarCountdown(model.engine.breakRemaining, text: model.settings.text) }
+            else if let remaining = model.engine.wakeRemaining { title = menuBarCountdown(remaining, text: model.settings.text) }
         }
-        if button.title != title { button.title = title }
+        let symbol = model.symbol
+        guard displayedSymbol != symbol || displayedCountdown != title else { return }
+        displayedSymbol = symbol
+        displayedCountdown = title
+        button.title = ""
+        button.imagePosition = .imageOnly
+        button.image = menuBarLabel(symbol: symbol, countdown: title)
+        button.setAccessibilityLabel(title.isEmpty ? "FlowBreak" : "FlowBreak, " + title)
     }
 
     @objc private func clicked(_ sender: NSStatusBarButton) {

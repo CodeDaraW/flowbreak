@@ -1,0 +1,16 @@
+{
+  "id": "0016-menu-bar-alignment",
+  "status": "completed",
+  "requirements": [
+    "FB-001",
+    "FB-011"
+  ],
+  "decisions": [
+    "docs/decisions/0009-menu-bar-label.md"
+  ],
+  "artifacts": [
+    "plan.md",
+    "tasks.md",
+    "verification.md"
+  ]
+}
