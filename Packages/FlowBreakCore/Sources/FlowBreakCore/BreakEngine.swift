@@ -391,7 +391,7 @@ public struct BreakEngine: Sendable {
     }
 
     public mutating func restore(_ saved: SessionSnapshot, at date: Date) {
-        let values = [saved.eye, saved.movement, saved.snoozeRemaining, saved.eyeRepeatRemaining, saved.strongRepeatRemaining,
+        let values: [Double] = [saved.eye, saved.movement, saved.snoozeRemaining, saved.eyeRepeatRemaining, saved.strongRepeatRemaining,
                       saved.eyeSnoozeRemaining ?? 0, saved.movementSnoozeRemaining ?? 0]
         guard saved.version == 1, values.allSatisfy({ $0.isFinite && $0 >= 0 }) else {
             record("snapshotRejected"); return
