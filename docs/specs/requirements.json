@@ -199,17 +199,25 @@
   },
   {
     "id": "FB-012",
-    "status": "implemented",
+    "status": "partial",
     "spec": "docs/specs/product.md",
-    "iteration": "0001-bootstrap",
+    "iteration": "0019-release-acceptance",
     "implementation": [
       "AGENTS.md",
       "scripts/dev.sh",
       "scripts/check_docs.py",
-      "LICENSE"
+      "LICENSE",
+      ".github/workflows/build.yml",
+      "scripts/install-xcodegen.sh",
+      "scripts/release.sh",
+      "scripts/package-dmg.sh"
     ],
     "verification": [
-      "docs/iterations/0001-bootstrap/verification.md"
-    ]
+      "docs/iterations/0001-bootstrap/verification.md",
+      "docs/iterations/0017-github-releases/verification.md",
+      "docs/iterations/0018-dmg-distribution/verification.md",
+      "docs/iterations/0019-release-acceptance/verification.md"
+    ],
+    "note": "GitHub build and DMG Release configuration prepared. Hosted workflow, real asset publication and downloaded-build acceptance remain pending; local environment lacks full Xcode."
   }
 ]

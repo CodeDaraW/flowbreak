@@ -25,7 +25,31 @@ open FlowBreak.xcodeproj
 
 构建输出在 `.build/DerivedData/Build/Products/Debug/FlowBreak.app`。应用不显示 Dock 图标，从菜单栏叶子图标打开。设置支持简体中文 / English / 跟随系统，参数按场景使用分钟或秒，有效值自动保存。生成工程不提交，`project.yml` 是工程配置唯一来源。
 
-SwiftPM 报 `sandbox_apply: Operation not permitted` 表示运行环境限制，应在正常本机终端运行或请求执行权限；不要通过禁用沙箱改写项目。Xcode 未选中时检查 `xcode-select -p`。XcodeGen 缺失按上述方式安装；签名发布与公证尚未配置。
+SwiftPM 报 `sandbox_apply: Operation not permitted` 表示运行环境限制，应在正常本机终端运行或请求执行权限；不要通过禁用沙箱改写项目。Xcode 未选中时检查 `xcode-select -p`。XcodeGen 缺失按上述方式安装；Developer ID 签名与公证尚未配置。
+
+## 自动构建与下载
+
+[GitHub Actions](https://github.com/CodeDaraW/flowbreak/actions/workflows/build.yml) 配置在 [build.yml](.github/workflows/build.yml)，应用下载见 [Releases](https://github.com/CodeDaraW/flowbreak/releases)。配置首次推送后的云端运行仍需验证。
+
+| 触发方式 | 执行内容 | 下载位置 |
+|---|---|---|
+| 推送 main、提交 PR | `make check`，再构建并打包 Release 配置 | Actions 运行页的 `FlowBreak-macos-arm64` artifact，保留 14 天 |
+| Actions → Build and Release → Run workflow | 手动检查与打包，不发布 | 同上 |
+| 推送 `v1.2.3` 标签 | 检查、打包并创建对应 Release | Releases 中的 DMG 与 `.sha256` |
+| 推送 `v1.2.3-rc.1` 标签 | 同上，标记为预发布 | Releases；支持 alpha / beta / rc，序号从 1 开始 |
+
+构建使用 arm64 `macos-15`、Xcode 16.4、校验 SHA-256 的 XcodeGen 2.45.4；只使用内置 `GITHUB_TOKEN`，无需配置 PAT 或证书 secrets。应用版本从标签取 `1.2.3`，构建号取 Actions run number。已有 Release 不覆盖；重跑已发布标签会在创建 Release 时失败，应使用新版本号发布修正。
+
+发布时，先把配置和待发布代码提交、推送到 main，再推送所需版本标签，例如：
+
+```sh
+git tag -a v0.1.0 -m "FlowBreak v0.1.0"
+git push origin v0.1.0
+```
+
+只有标签的 push 自动发布；在网页创建 Release 不触发此流程。仓库需允许 GitHub Actions 运行，仓库或组织策略需允许发布 job 使用 `contents: write`。完整 Xcode 环境下可运行 `./scripts/install-xcodegen.sh`、`make check`、`./scripts/release.sh v0.1.0` 本地验证；包生成在 `.build/release/dist/`，脚本本身不发布。
+
+**下载版是临时签名、未公证的开发版。** 仅支持 macOS 14+ Apple Silicon；macOS 14 真机验收仍待完成。下载 DMG 与同名 `.sha256` 后，在下载目录运行 `shasum -a 256 -c FlowBreak-v0.1.0-macos-arm64.dmg.sha256`（替换为实际版本）验证，再退出旧版、打开 DMG，将 FlowBreak.app 拖到其中的 Applications 入口，推出镜像后从 Applications 启动。macOS 可能阻止打开，请参考 [Apple 官方说明](https://support.apple.com/zh-cn/102445) 决定是否允许打开。Focus Filter 配置可能不可用，可使用手动静默；下载版登录启动等系统集成仍需实测。详见 [发布说明](docs/release-notes.md) 与 [DMG 分发决策](docs/decisions/0011-dmg-distribution.md)。
 
 ## 使用与本地数据
 

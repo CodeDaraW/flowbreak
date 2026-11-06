@@ -1,0 +1,7 @@
+{
+  "id": "0019-release-acceptance",
+  "status": "active",
+  "requirements": ["FB-001", "FB-012"],
+  "decisions": ["docs/decisions/0010-github-releases.md", "docs/decisions/0011-dmg-distribution.md"],
+  "artifacts": ["plan.md", "tasks.md", "verification.md"]
+}

@@ -27,6 +27,30 @@ The app is built at `.build/DerivedData/Build/Products/Debug/FlowBreak.app`. `ma
 
 If SwiftPM reports `sandbox_apply: Operation not permitted`, run from a normal local terminal or request execution permission; do not disable the package sandbox. Check `xcode-select -p` if Xcode is unavailable. Distribution signing and notarization are not configured.
 
+## Automated builds and downloads
+
+The [GitHub Actions workflow](https://github.com/CodeDaraW/flowbreak/actions/workflows/build.yml) is defined in [build.yml](.github/workflows/build.yml). Download versioned apps from [Releases](https://github.com/CodeDaraW/flowbreak/releases). The first hosted run after pushing this configuration still needs verification.
+
+| Trigger | Work | Download |
+|---|---|---|
+| Push to main or open/update a PR | `make check`, then build and package the Release configuration | `FlowBreak-macos-arm64` artifact on the Actions run page, retained for 14 days |
+| Actions → Build and Release → Run workflow | Check and package without publishing | Same artifact |
+| Push `v1.2.3` | Check, package and create the matching GitHub Release | Release DMG and `.sha256` assets |
+| Push `v1.2.3-rc.1` | Same, marked as a prerelease | Releases; alpha / beta / rc supported, starting at 1 |
+
+Builds use an arm64 `macos-15` runner, Xcode 16.4 and SHA-256-verified XcodeGen 2.45.4. Only the built-in `GITHUB_TOKEN` is needed, with no PAT or certificate secrets. The app version comes from the tag's `1.2.3`; the build number uses the Actions run number. Existing Releases are never overwritten. Rerunning an already published tag fails at Release creation; use a new version for fixes.
+
+After committing and pushing the configuration and release code to main, publish by pushing a version tag, for example:
+
+```sh
+git tag -a v0.1.0 -m "FlowBreak v0.1.0"
+git push origin v0.1.0
+```
+
+Only tag pushes publish automatically; creating a Release in the web UI does not trigger this workflow. GitHub Actions must be enabled, and repository/organization policies must allow the release job's `contents: write` permission. With full Xcode installed, run `./scripts/install-xcodegen.sh`, `make check`, then `./scripts/release.sh v0.1.0` to check packaging locally. Outputs go to `.build/release/dist/`; the script itself never publishes.
+
+**Downloads are development builds with ad-hoc signing and no Apple notarization.** They require macOS 14+ and Apple Silicon; macOS 14 runtime acceptance remains pending. Download both the DMG and its `.sha256`, then run `shasum -a 256 -c FlowBreak-v0.1.0-macos-arm64.dmg.sha256` using the actual version. Quit the old app, open the DMG and drag FlowBreak.app onto its Applications shortcut. Eject the image, then launch the app from Applications. macOS may block it; consult [Apple's guidance](https://support.apple.com/en-us/102445) before allowing it to open. Focus Filter setup may be unavailable; manual quiet mode is available. Downloaded-build system integration, including login items, still needs testing. See [release notes](docs/release-notes.md) and [ADR-0011](docs/decisions/0011-dmg-distribution.md).
+
 ## Behavior and data
 
 Eye breaks reset only eye time; movement breaks reset both. Snooze suppresses every reminder until its deadline. Dismissing a panel is not skipping a break. Agent mode pauses timing and keeps the Mac awake; resuming timing leaves keep-awake active.

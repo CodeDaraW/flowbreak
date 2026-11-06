@@ -37,7 +37,7 @@
 
 ## 暂不纳入
 
-会议参与检测、日历、摄像头/麦克风、屏幕内容、视线、坐姿、手机使用检测；不区分真人与 Agent 输入，不强制休息或处罚。App Store、自动更新、签名公证与远端仓库未配置。不开启后台 AI 服务。
+会议参与检测、日历、摄像头/麦克风、屏幕内容、视线、坐姿、手机使用检测；不区分真人与 Agent 输入，不强制休息或处罚。App Store、自动更新、Developer ID 签名与公证未配置。GitHub 构建与分发约定见下文。不开启后台 AI 服务。
 
 ## 当前实现约定与剩余验收
 
@@ -95,3 +95,17 @@ FB-012：准备在 GitHub 以 MIT 公开源码；项目完全通过 Vibe Coding 
 ## 2026-10-12 状态栏垂直对齐（Accepted）
 
 FB-001、FB-011：状态栏图标和倒计时按可见内容垂直居中，中文/英文、分钟/秒均保持一致。保留等宽数字、分钟向上取整和不足一分钟显示秒的规则，以及原生左右键操作与系统深浅色着色。辅助功能应包含应用名和当前倒计时。见 [迭代 0016](../iterations/0016-menu-bar-alignment/plan.md) 与 [ADR-0009](../decisions/0009-menu-bar-label.md)。
+
+## 2026-11-06 GitHub 构建与分发（Accepted）
+
+FB-001、FB-012：在已有 GitHub 仓库配置自动检查及 macOS 14+ arm64 开发版分发。main 推送、PR 与手动运行执行检查并保存构建产物；推送 `vX.Y.Z` 或 `vX.Y.Z-alpha.N/beta.N/rc.N` 标签，通过检查后创建对应 GitHub Release，上传 Release 配置的应用 DMG 和 SHA-256 校验文件，预发布标签标记为 prerelease。应用版本使用标签的 X.Y.Z，构建号使用 Actions run number。
+
+发布版暂用 ad-hoc 临时签名，没有 Developer ID 或 Apple 公证；下载页必须明确 macOS 安全检查与 Focus Filter 可能不可用的限制。构建成功不代表 macOS 14 真机或系统集成验收通过。本次只准备配置；推送、打标签和实际发布仍需后续明确操作。见 [迭代 0017](../iterations/0017-github-releases/plan.md) 与 [ADR-0010](../decisions/0010-github-releases.md)。
+
+### 2026-11-06 分发格式调整（Accepted）
+
+FB-001、FB-012：用户选择 DMG 替代 ZIP。只读压缩镜像内包含 FlowBreak.app、指向 Applications 的快捷入口、MIT 许可及中英说明；用户挂载后拖拽安装，推出镜像后从 Applications 启动。构建时验证镜像与挂载后的签名、可执行权限和包内容一致性。Release 上传 `.dmg` 与 `.dmg.sha256`；签名公证、版本和触发规则保持原约定。见 [迭代 0018](../iterations/0018-dmg-distribution/plan.md) 与 [ADR-0011](../decisions/0011-dmg-distribution.md)。
+
+### 2026-11-06 云端发布验收授权（Accepted）
+
+FB-001、FB-012：用户已明确授权提交并推送构建配置，创建测试预发布标签，并测试实际 GitHub 构建和 Release 下载。本轮选择尚未使用的 `v0.1.0-rc.N`，不覆盖现有版本。使用 browser/computer use 时必须由 GPT-6.1 Terra 子代理执行。见 [迭代 0019](../iterations/0019-release-acceptance/plan.md)。

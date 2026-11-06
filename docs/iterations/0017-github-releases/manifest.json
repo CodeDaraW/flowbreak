@@ -1,0 +1,7 @@
+{
+  "id": "0017-github-releases",
+  "status": "active",
+  "requirements": ["FB-001", "FB-012"],
+  "decisions": ["docs/decisions/0010-github-releases.md"],
+  "artifacts": ["plan.md", "tasks.md", "verification.md"]
+}
