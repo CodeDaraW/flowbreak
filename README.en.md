@@ -29,7 +29,7 @@ If SwiftPM reports `sandbox_apply: Operation not permitted`, run from a normal l
 
 ## Automated builds and downloads
 
-The [GitHub Actions workflow](https://github.com/CodeDaraW/flowbreak/actions/workflows/build.yml) is defined in [build.yml](.github/workflows/build.yml). Download versioned apps from [Releases](https://github.com/CodeDaraW/flowbreak/releases). The first hosted run after pushing this configuration still needs verification.
+The [GitHub Actions workflow](https://github.com/CodeDaraW/flowbreak/actions/workflows/build.yml) is defined in [build.yml](.github/workflows/build.yml). Download versioned apps from [Releases](https://github.com/CodeDaraW/flowbreak/releases). Hosted builds, DMG packaging and prerelease asset uploads have been verified with [v0.1.0-rc.1](https://github.com/CodeDaraW/flowbreak/releases/tag/v0.1.0-rc.1). See the [acceptance record](docs/iterations/0019-release-acceptance/verification.md) for the tested scope.
 
 | Trigger | Work | Download |
 |---|---|---|

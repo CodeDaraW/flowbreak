@@ -29,7 +29,7 @@ SwiftPM 报 `sandbox_apply: Operation not permitted` 表示运行环境限制，
 
 ## 自动构建与下载
 
-[GitHub Actions](https://github.com/CodeDaraW/flowbreak/actions/workflows/build.yml) 配置在 [build.yml](.github/workflows/build.yml)，应用下载见 [Releases](https://github.com/CodeDaraW/flowbreak/releases)。配置首次推送后的云端运行仍需验证。
+[GitHub Actions](https://github.com/CodeDaraW/flowbreak/actions/workflows/build.yml) 配置在 [build.yml](.github/workflows/build.yml)，应用下载见 [Releases](https://github.com/CodeDaraW/flowbreak/releases)。云端构建、DMG 打包和预发布资产上传已验证，测试版本见 [v0.1.0-rc.1](https://github.com/CodeDaraW/flowbreak/releases/tag/v0.1.0-rc.1)；验收范围见 [验证记录](docs/iterations/0019-release-acceptance/verification.md)。
 
 | 触发方式 | 执行内容 | 下载位置 |
 |---|---|---|

@@ -29,3 +29,7 @@
 | macOS 14 与实际下载环境 | Finder 打开、拖拽安装、推出后启动；Gatekeeper、Focus Filter、登录启动 |
 
 迭代保持 active，FB-012 保持 partial；不以 fixture 代替平台或云端验收。
+
+## 后续真实云端与下载验收（2026-11-06）
+
+[迭代 0019](../0019-release-acceptance/verification.md) 已完成真实 macOS 15 / Xcode 16.4 的 make check、FlowBreak Release 构建、DMG 生成、GitHub prerelease 上传、公开 HTTP 下载和本机 Finder 镜像打开。此前的“云端待验证”是本轮最初记录，后续证据以 0019 为准；Chrome 下载拦截、Gatekeeper 拒绝及应用启动 / macOS 14 等边界仍须保留。

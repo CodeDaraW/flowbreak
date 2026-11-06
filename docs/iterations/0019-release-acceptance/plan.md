@@ -1,6 +1,8 @@
 # Iteration 0019：GitHub 构建与 Release 下载验收
 
-Status: active
+Status: completed
+
+结果：main 与测试标签的完整构建通过，v0.1.0-rc.1 自动发布，公开 HTTP 下载与真实 DMG 内容检查通过。Chrome 下载被客户端拦截、Gatekeeper 拒绝、应用未启动，详见 verification.md；上述结果不等于整个浏览器下载到首次启动流程通过。
 
 来源：用户 2026-11-06 明确授权将配置推送到 GitHub，并测试构建和 Release 下载。关联 FB-001、FB-012。延续 [0017](../0017-github-releases/plan.md) 与 [0018](../0018-dmg-distribution/plan.md)，本轮授权提交、推送和发布测试预发布版本。
 

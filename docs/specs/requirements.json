@@ -199,7 +199,7 @@
   },
   {
     "id": "FB-012",
-    "status": "partial",
+    "status": "implemented",
     "spec": "docs/specs/product.md",
     "iteration": "0019-release-acceptance",
     "implementation": [
@@ -210,7 +210,8 @@
       ".github/workflows/build.yml",
       "scripts/install-xcodegen.sh",
       "scripts/release.sh",
-      "scripts/package-dmg.sh"
+      "scripts/package-dmg.sh",
+      "Packages/FlowBreakCore/Sources/FlowBreakCore/BreakEngine.swift"
     ],
     "verification": [
       "docs/iterations/0001-bootstrap/verification.md",
@@ -218,6 +219,6 @@
       "docs/iterations/0018-dmg-distribution/verification.md",
       "docs/iterations/0019-release-acceptance/verification.md"
     ],
-    "note": "GitHub build and DMG Release configuration prepared. Hosted workflow, real asset publication and downloaded-build acceptance remain pending; local environment lacks full Xcode."
+    "note": "Hosted main and v0.1.0-rc.1 builds, 56 tests, Debug/Release builds, DMG validation, prerelease asset publication and public HTTP downloads verified on macOS15 arm64/Xcode16.4 and local macOS27.2 arm64. Browser and Gatekeeper acceptance boundaries are recorded in iteration0019; signing/notarization is outside current scope."
   }
 ]
